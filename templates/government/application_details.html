@@ -1,0 +1,93 @@
+{% extends "base.html" %} {% block title %}Application Details - Innovation
+Procurement Bridge{% endblock %} {% block content %}
+<div class="container py-4">
+  <!-- Header -->
+  <div class="d-flex align-items-center mb-4">
+    <a
+      href="{{ url_for('government.application_list') }}"
+      class="btn btn-outline-secondary btn-sm me-3"
+    >
+      <i class="bi bi-arrow-left"></i> Back to Applications
+    </a>
+    <h2 class="fw-bold mb-0">Application Details: NeuralTraffic Tech</h2>
+  </div>
+
+  <div class="row g-4">
+    <!-- Main Application Info -->
+    <div class="col-lg-8">
+      <div class="card border-0 shadow-sm rounded-3 mb-4">
+        <div class="card-body p-4">
+          <h4 class="fw-bold mb-3">Proposed Solution Overview</h4>
+          <p class="text-secondary">
+            NeuralTraffic Tech offers an edge-AI computer vision model that
+            integrates directly with existing municipal camera networks to
+            dynamically optimize traffic light signals in real-time.
+          </p>
+
+          <hr class="my-4" />
+
+          <h5 class="fw-bold mb-3">Technical Highlights</h5>
+          <ul class="text-secondary ps-3">
+            <li>Sub-50ms latency video processing at city intersections.</li>
+            <li>
+              Automated priority routing for emergency vehicles (ambulances,
+              fire engines).
+            </li>
+            <li>
+              Low-power IoT edge devices with cellular failover connectivity.
+            </li>
+          </ul>
+
+          <hr class="my-4" />
+
+          <h5 class="fw-bold mb-3">Submitted Documents</h5>
+          <div class="d-flex gap-2">
+            <button class="btn btn-light border btn-sm">
+              <i class="bi bi-file-earmark-pdf text-danger me-1"></i> Technical
+              Proposal.pdf
+            </button>
+            <button class="btn btn-light border btn-sm">
+              <i class="bi bi-file-earmark-excel text-success me-1"></i>
+              Financial Breakup.xlsx
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Decision & Metrics Panel -->
+    <div class="col-lg-4">
+      <div class="card border-0 shadow-sm rounded-3 mb-4">
+        <div class="card-body p-4">
+          <h5 class="fw-bold mb-3">Proposal Summary</h5>
+          <div class="mb-3">
+            <small class="text-muted d-block">Target Challenge</small>
+            <span class="fw-semibold">Smart Traffic Management System</span>
+          </div>
+          <div class="mb-3">
+            <small class="text-muted d-block">Proposed Cost</small>
+            <span class="fw-semibold">₹22,50,000</span>
+          </div>
+          <div class="mb-3">
+            <small class="text-muted d-block">AI Feasibility Score</small>
+            <span class="badge bg-success-subtle text-success fs-6"
+              >92 / 100</span
+            >
+          </div>
+
+          <hr class="my-4" />
+
+          <h5 class="fw-bold mb-3">Update Status</h5>
+          <div class="d-grid gap-2">
+            <button class="btn btn-success">Approve for Pilot</button>
+            <button class="btn btn-outline-warning">
+              Request Clarification
+            </button>
+            <button class="btn btn-outline-danger">Reject Application</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,72 @@
+{% extends "base.html" %} {% block title %}Performance Analytics - Innovation
+Procurement Bridge{% endblock %} {% block content %}
+<div class="container py-4">
+  <!-- Header -->
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+      <h2 class="fw-bold mb-1">Government Procurement Analytics</h2>
+      <p class="text-muted mb-0">
+        Evaluate innovation efficiency, turnaround times, and impact metrics.
+      </p>
+    </div>
+    <a
+      href="{{ url_for('government.dashboard') }}"
+      class="btn btn-outline-secondary"
+    >
+      <i class="bi bi-arrow-left"></i> Return to Dashboard
+    </a>
+  </div>
+
+  <!-- Analytics Cards -->
+  <div class="row g-4 mb-4">
+    <div class="col-md-4">
+      <div class="card border-0 shadow-sm rounded-3">
+        <div class="card-body p-4">
+          <span class="text-muted fw-semibold small"
+            >Avg. Procurement Cycle Time</span
+          >
+          <h2 class="fw-bold my-2 text-primary">28 Days</h2>
+          <small class="text-success"
+            ><i class="bi bi-arrow-down"></i> 40% faster than traditional
+            RFP</small
+          >
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card border-0 shadow-sm rounded-3">
+        <div class="card-body p-4">
+          <span class="text-muted fw-semibold small">Pilot Success Rate</span>
+          <h2 class="fw-bold my-2 text-success">83%</h2>
+          <small class="text-muted">5 out of 6 pilots scaled up</small>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card border-0 shadow-sm rounded-3">
+        <div class="card-body p-4">
+          <span class="text-muted fw-semibold small"
+            >Startup Onboarding Rate</span
+          >
+          <h2 class="fw-bold my-2 text-info">14 / Mo</h2>
+          <small class="text-success"
+            ><i class="bi bi-arrow-up"></i> +18% increase this quarter</small
+          >
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Summary Section -->
+  <div class="card border-0 shadow-sm rounded-3">
+    <div class="card-body p-4">
+      <h5 class="fw-bold mb-3">Key Impact Metrics</h5>
+      <p class="text-secondary">
+        Through automated matchmaking and streamlined evaluation, government
+        departments have reduced overall RFP creation and review timelines by
+        more than 30 days while increasing high-tech startup participation.
+      </p>
+    </div>
+  </div>
+</div>
+{% endblock %}
