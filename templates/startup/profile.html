@@ -1,0 +1,43 @@
+{% extends "base.html" %} {% block title %}Startup Profile{% endblock %} {%
+block content %}
+<link
+  rel="stylesheet"
+  href="{{ url_for('static', filename='css/startup.css') }}"
+/>
+
+<div class="startup-container">
+  <h2>Company Profile</h2>
+  <form method="POST" action="/startup/profile" class="card">
+    <div class="form-group">
+      <label>Startup Name</label>
+      <input
+        type="text"
+        name="name"
+        class="form-control"
+        value="{{ startup.name }}"
+        required
+      />
+    </div>
+    <div class="form-group">
+      <label>DPIIT Registration Number</label>
+      <input
+        type="text"
+        name="dpiit_id"
+        class="form-control"
+        value="{{ startup.dpiit_id }}"
+        required
+      />
+    </div>
+    <div class="form-group">
+      <label>Core Technology / Domain</label>
+      <input
+        type="text"
+        name="technology"
+        class="form-control"
+        value="{{ startup.technology }}"
+      />
+    </div>
+    <button type="submit" class="btn">Save Profile</button>
+  </form>
+</div>
+{% endblock %}

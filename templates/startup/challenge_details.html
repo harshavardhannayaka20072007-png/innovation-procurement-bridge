@@ -1,0 +1,21 @@
+{% extends "base.html" %} {% block title %}Challenge Details{% endblock %} {%
+block content %}
+<link
+  rel="stylesheet"
+  href="{{ url_for('static', filename='css/startup.css') }}"
+/>
+
+<div class="startup-container">
+  <div class="card">
+    <h2>{{ challenge.title }}</h2>
+    <p><strong>Department:</strong> {{ challenge.department }}</p>
+    <p><strong>Deadline:</strong> {{ challenge.deadline }}</p>
+    <hr />
+    <h3>Problem Statement</h3>
+    <p>{{ challenge.description }}</p>
+    <h3>Requirements</h3>
+    <p>{{ challenge.requirements }}</p>
+    <a href="/startup/apply/{{ challenge.id }}" class="btn">Apply Now</a>
+  </div>
+</div>
+{% endblock %}

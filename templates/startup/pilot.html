@@ -1,0 +1,24 @@
+{% extends "base.html" %} {% block title %}Pilot Program{% endblock %} {% block
+content %}
+<link
+  rel="stylesheet"
+  href="{{ url_for('static', filename='css/startup.css') }}"
+/>
+
+<div class="startup-container">
+  <h2>Active Pilot Implementation</h2>
+  <div class="card">
+    <h3>{{ pilot.title }}</h3>
+    <p><strong>Department:</strong> {{ pilot.department }}</p>
+    <p><strong>Duration:</strong> {{ pilot.duration_months }} Months</p>
+    <p>
+      <strong>Status:</strong>
+      <span class="badge badge-warning">{{ pilot.status }}</span>
+    </p>
+    <br />
+    <a href="/startup/milestones/{{ pilot.id }}" class="btn"
+      >View Milestones & Upload Evidence</a
+    >
+  </div>
+</div>
+{% endblock %}

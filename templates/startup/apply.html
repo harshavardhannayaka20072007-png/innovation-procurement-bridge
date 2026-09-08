@@ -1,0 +1,43 @@
+{% extends "base.html" %} {% block title %}Apply for Challenge{% endblock %} {%
+block content %}
+<link
+  rel="stylesheet"
+  href="{{ url_for('static', filename='css/startup.css') }}"
+/>
+
+<div class="startup-container">
+  <h2>Submit Application</h2>
+  <form id="startup-apply-form" class="card">
+    <input type="hidden" name="challenge_id" value="{{ challenge_id }}" />
+    <div class="form-group">
+      <label>Proposed Solution Description</label>
+      <textarea
+        name="solution"
+        class="form-control"
+        rows="4"
+        required
+      ></textarea>
+    </div>
+    <div class="form-group">
+      <label>Technology Stack</label>
+      <input type="text" name="technology" class="form-control" required />
+    </div>
+    <div class="form-group">
+      <label>Estimated Timeline (Months)</label>
+      <input type="number" name="timeline" class="form-control" required />
+    </div>
+    <button
+      type="button"
+      id="calc-score-btn"
+      class="btn"
+      style="background: #64748b"
+    >
+      Preview Readiness Score
+    </button>
+    <p id="score-preview" style="margin-top: 0.5rem; font-weight: bold"></p>
+    <br />
+    <button type="submit" class="btn">Submit Proposal</button>
+  </form>
+</div>
+<script src="{{ url_for('static', filename='js/startup.js') }}"></script>
+{% endblock %}

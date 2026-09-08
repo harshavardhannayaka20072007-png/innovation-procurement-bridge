@@ -1,0 +1,24 @@
+{% extends "base.html" %} {% block title %}Application Details{% endblock %} {%
+block content %}
+<link
+  rel="stylesheet"
+  href="{{ url_for('static', filename='css/startup.css') }}"
+/>
+
+<div class="startup-container">
+  <div class="card">
+    <h2>
+      Application Status:
+      <span class="badge badge-success">{{ application.status }}</span>
+    </h2>
+    <p><strong>Challenge:</strong> {{ application.challenge_title }}</p>
+    <p>
+      <strong>Automated Readiness Score:</strong> {{ application.total_score
+      }}/100
+    </p>
+    <hr />
+    <h3>Submitted Proposal</h3>
+    <p>{{ application.solution }}</p>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,28 @@
+{% extends "base.html" %} {% block title %}Startup Dashboard{% endblock %} {%
+block content %}
+<link
+  rel="stylesheet"
+  href="{{ url_for('static', filename='css/startup.css') }}"
+/>
+
+<div class="startup-container">
+  <h2>Startup Dashboard</h2>
+  <div class="dashboard-grid">
+    <div class="card metric-card">
+      <h3>Active Applications</h3>
+      <p class="metric-value">{{ applications_count | default(0) }}</p>
+      <a href="/startup/applications" class="btn">View All</a>
+    </div>
+    <div class="card metric-card">
+      <h3>Active Pilots</h3>
+      <p class="metric-value">{{ pilots_count | default(0) }}</p>
+      <a href="/startup/pilot" class="btn">View Pilots</a>
+    </div>
+    <div class="card metric-card">
+      <h3>Readiness Score</h3>
+      <p class="metric-value">{{ readiness_score | default('N/A') }}</p>
+      <a href="/startup/profile" class="btn">Update Profile</a>
+    </div>
+  </div>
+</div>
+{% endblock %}
