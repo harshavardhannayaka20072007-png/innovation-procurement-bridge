@@ -1,0 +1,98 @@
+{% extends "base.html" %} {% block title %}Government Dashboard - Innovation
+Procurement Bridge{% endblock %} {% block content %}
+<div class="container-fluid py-4">
+  <!-- Header Section -->
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+      <h2 class="fw-bold mb-1">Government Portal Dashboard</h2>
+      <p class="text-muted mb-0">
+        Overview of active challenges, startup applications, and pilot programs.
+      </p>
+    </div>
+    <a
+      href="{{ url_for('government.create_challenge') }}"
+      class="btn btn-primary"
+    >
+      <i class="bi bi-plus-circle me-1"></i> Post New Challenge
+    </a>
+  </div>
+
+  <!-- Metrics Overview -->
+  <div class="row g-3 mb-4">
+    <div class="col-md-3">
+      <div class="card border-0 shadow-sm rounded-3">
+        <div class="card-body">
+          <span class="text-muted fw-semibold small">Active Challenges</span>
+          <h3 class="fw-bold my-2">12</h3>
+          <span class="badge bg-success-subtle text-success"
+            >3 Closing Soon</span
+          >
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card border-0 shadow-sm rounded-3">
+        <div class="card-body">
+          <span class="text-muted fw-semibold small">Total Applications</span>
+          <h3 class="fw-bold my-2">84</h3>
+          <span class="badge bg-info-subtle text-info">18 Under Review</span>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card border-0 shadow-sm rounded-3">
+        <div class="card-body">
+          <span class="text-muted fw-semibold small">Active Pilots</span>
+          <h3 class="fw-bold my-2">6</h3>
+          <span class="badge bg-primary-subtle text-primary"
+            >2 Near Completion</span
+          >
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card border-0 shadow-sm rounded-3">
+        <div class="card-body">
+          <span class="text-muted fw-semibold small">Procurement Budget</span>
+          <h3 class="fw-bold my-2">₹1.2 Cr</h3>
+          <span class="badge bg-warning-subtle text-warning"
+            >65% Allocated</span
+          >
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Quick Navigation Links -->
+  <div class="row g-3 mb-4">
+    <div class="col-md-3">
+      <a
+        href="{{ url_for('government.challenges') }}"
+        class="btn btn-outline-secondary w-100 py-2"
+        >View All Challenges</a
+      >
+    </div>
+    <div class="col-md-3">
+      <a
+        href="{{ url_for('government.application_list') }}"
+        class="btn btn-outline-secondary w-100 py-2"
+        >Manage Applications</a
+      >
+    </div>
+    <div class="col-md-3">
+      <a
+        href="{{ url_for('government.pilots') }}"
+        class="btn btn-outline-secondary w-100 py-2"
+        >Monitor Pilots</a
+      >
+    </div>
+    <div class="col-md-3">
+      <a
+        href="{{ url_for('government.performance') }}"
+        class="btn btn-outline-secondary w-100 py-2"
+        >Performance Analytics</a
+      >
+    </div>
+  </div>
+</div>
+{% endblock %}

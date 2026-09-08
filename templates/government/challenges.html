@@ -1,0 +1,130 @@
+{% extends "base.html" %} {% block title %}Manage Challenges - Innovation
+Procurement Bridge{% endblock %} {% block content %}
+<div class="container py-4">
+  <!-- Header -->
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+      <h2 class="fw-bold mb-1">Government Challenges</h2>
+      <p class="text-muted mb-0">
+        Track and manage all published innovation problem statements.
+      </p>
+    </div>
+    <a
+      href="{{ url_for('government.create_challenge') }}"
+      class="btn btn-primary"
+    >
+      <i class="bi bi-plus-circle me-1"></i> Create Challenge
+    </a>
+  </div>
+
+  <!-- Filters -->
+  <div class="card border-0 shadow-sm rounded-3 mb-4">
+    <div class="card-body">
+      <div class="row g-3">
+        <div class="col-md-5">
+          <input
+            type="text"
+            class="form-control"
+            placeholder="Search by challenge title or department..."
+          />
+        </div>
+        <div class="col-md-3">
+          <select class="form-select">
+            <option value="">All Sectors</option>
+            <option value="mobility">Urban Mobility</option>
+            <option value="health">Healthcare</option>
+            <option value="energy">Clean Energy</option>
+          </select>
+        </div>
+        <div class="col-md-3">
+          <select class="form-select">
+            <option value="">All Statuses</option>
+            <option value="active">Active</option>
+            <option value="review">Under Review</option>
+            <option value="closed">Closed</option>
+          </select>
+        </div>
+        <div class="col-md-1">
+          <button class="btn btn-outline-primary w-100">Filter</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Challenges Table -->
+  <div class="card border-0 shadow-sm rounded-3">
+    <div class="card-body p-0">
+      <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0">
+          <thead class="table-light">
+            <tr>
+              <th scope="col" class="ps-4">Title</th>
+              <th scope="col">Department</th>
+              <th scope="col">Budget</th>
+              <th scope="col">Deadline</th>
+              <th scope="col">Applications</th>
+              <th scope="col">Status</th>
+              <th scope="col" class="text-end pe-4">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="ps-4 fw-semibold">Smart Traffic Management System</td>
+              <td>Transport Dept</td>
+              <td>₹25,00,000</td>
+              <td>15 Oct 2026</td>
+              <td><span class="badge bg-secondary">14</span></td>
+              <td>
+                <span class="badge bg-success-subtle text-success">Active</span>
+              </td>
+              <td class="text-end pe-4">
+                <a
+                  href="{{ url_for('government.application_list') }}"
+                  class="btn btn-sm btn-outline-primary"
+                  >View Applications</a
+                >
+              </td>
+            </tr>
+            <tr>
+              <td class="ps-4 fw-semibold">Solar-Powered Cold Storage Units</td>
+              <td>Agriculture Ministry</td>
+              <td>₹40,00,000</td>
+              <td>28 Oct 2026</td>
+              <td><span class="badge bg-secondary">9</span></td>
+              <td>
+                <span class="badge bg-success-subtle text-success">Active</span>
+              </td>
+              <td class="text-end pe-4">
+                <a
+                  href="{{ url_for('government.application_list') }}"
+                  class="btn btn-sm btn-outline-primary"
+                  >View Applications</a
+                >
+              </td>
+            </tr>
+            <tr>
+              <td class="ps-4 fw-semibold">AI Medical Diagnostic Assistant</td>
+              <td>Health & Family Welfare</td>
+              <td>₹30,00,000</td>
+              <td>01 Sep 2026</td>
+              <td><span class="badge bg-secondary">22</span></td>
+              <td>
+                <span class="badge bg-warning-subtle text-warning"
+                  >Under Evaluation</span
+                >
+              </td>
+              <td class="text-end pe-4">
+                <a
+                  href="{{ url_for('government.application_list') }}"
+                  class="btn btn-sm btn-outline-primary"
+                  >View Applications</a
+                >
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
