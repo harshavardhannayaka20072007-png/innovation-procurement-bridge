@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block title %}Milestone Verification | Innovation Procurement Bridge{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/evaluator.css') }}">
+
+<div class="eval-container">
+    <h2>Milestone & Evidence Verification</h2>
+    <p class="subtitle">Verify evidence submitted by startups before milestone payment release.</p>
+
+    <div class="details-card">
+        <h3>Pilot: PLT-501 (EcoTech Solutions)</h3>
+        <p><strong>Milestone 2:</strong> System operating with 20 vehicles in Pune.</p>
+        <p><strong>Due Date:</strong> Month 2 | <strong>Status:</strong> Under Review</p>
+    </div>
+
+    <div class="evidence-box">
+        <h3>Submitted Evidence</h3>
+        <ul>
+            <li>📄 <a href="#">GPS Tracking Logs (PDF)</a></li>
+            <li>📊 <a href="#">Route Efficiency Metrics (CSV)</a></li>
+            <li>📷 <a href="#">On-Site Deployment Proof (JPG)</a></li>
+        </ul>
+    </div>
+
+    <form id="milestoneForm" class="eval-form">
+        <input type="hidden" name="milestone_id" value="2">
+        
+        <div class="form-group">
+            <label for="status">Verification Decision:</label>
+            <select id="status" name="status">
+                <option value="APPROVED">Approve Milestone & Release Payment</option>
+                <option value="REJECTED">Reject Evidence</option>
+                <option value="REWORK">Request Further Evidence</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="review_notes">Verification Notes:</label>
+            <textarea id="review_notes" name="review_notes" rows="3" placeholder="Notes on verified evidence..." required>Verified GPS logs and field deployment. Criteria satisfied.</textarea>
+        </div>
+
+        <button type="submit" class="btn-action">Submit Verification Decision</button>
+    </form>
+</div>
+<script src="{{ url_for('static', filename='js/evaluator.js') }}"></script>
+{% endblock %}

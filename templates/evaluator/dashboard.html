@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+{% block title %}Evaluator Dashboard | Innovation Procurement Bridge{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/evaluator.css') }}">
+
+<div class="eval-container">
+    <h2>Evaluator & Pilot Oversight Dashboard</h2>
+    <p class="subtitle">Review applications, validate pilot milestones, and submit final procurement recommendations.</p>
+
+    <div class="stats-grid">
+        <div class="stat-card">
+            <h3>Pending Reviews</h3>
+            <p class="stat-number">4</p>
+        </div>
+        <div class="stat-card">
+            <h3>Active Pilots</h3>
+            <p class="stat-number">2</p>
+        </div>
+        <div class="stat-card">
+            <h3>Milestones Pending</h3>
+            <p class="stat-number">3</p>
+        </div>
+    </div>
+
+    <h3>Assigned Applications for Evaluation</h3>
+    <table class="eval-table">
+        <thead>
+            <tr>
+                <th>App ID</th>
+                <th>Challenge Title</th>
+                <th>Startup Name</th>
+                <th>Readiness Score</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>APP-101</td>
+                <td>Smart Garbage Collection</td>
+                <td>EcoTech Solutions</td>
+                <td><span class="score-badge high">91/100</span></td>
+                <td><a href="/evaluator/application_review?id=101" class="btn-action">Evaluate</a></td>
+            </tr>
+            <tr>
+                <td>APP-104</td>
+                <td>Hospital Queue Optimization</td>
+                <td>HealthPulse AI</td>
+                <td><span class="score-badge medium">84/100</span></td>
+                <td><a href="/evaluator/application_review?id=104" class="btn-action">Evaluate</a></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h3 style="margin-top: 2rem;">Active Pilots & Monitoring</h3>
+    <table class="eval-table">
+        <thead>
+            <tr>
+                <th>Pilot ID</th>
+                <th>Startup</th>
+                <th>Location</th>
+                <th>Progress</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>PLT-501</td>
+                <td>EcoTech Solutions</td>
+                <td>Pune (20 Vehicles)</td>
+                <td>66% Completed</td>
+                <td>
+                    <a href="/evaluator/milestone_review?pilot_id=501" class="btn-action">Review Milestones</a>
+                    <a href="/evaluator/performance_review?pilot_id=501" class="btn-action secondary">KPIs</a>
+                    <a href="/evaluator/recommendation?pilot_id=501" class="btn-action warning">Final Decision</a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<script src="{{ url_for('static', filename='js/evaluator.js') }}"></script>
+{% endblock %}

@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block title %}Final Recommendation | Innovation Procurement Bridge{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/evaluator.css') }}">
+
+<div class="eval-container">
+    <h2>Final Procurement Decision</h2>
+    <p class="subtitle">Recommend the strategic next step based on pilot performance data.</p>
+
+    <div class="details-card">
+        <h3>Pilot Summary: PLT-501 (EcoTech Solutions)</h3>
+        <p><strong>Overall Score:</strong> 91%</p>
+        <p><strong>KPIs Met:</strong> 3/3 Passed</p>
+    </div>
+
+    <form id="decisionForm" class="eval-form">
+        <input type="hidden" name="pilot_id" value="501">
+
+        <div class="form-group">
+            <label for="decision">Strategic Recommendation:</label>
+            <select id="decision" name="decision" class="decision-select">
+                <option value="SCALE" style="color: green; font-weight: bold;">SCALE (Expand procurement state-wide)</option>
+                <option value="IMPROVE" style="color: orange; font-weight: bold;">IMPROVE (Extend pilot for refinements)</option>
+                <option value="STOP" style="color: red; font-weight: bold;">STOP (Terminate pilot)</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="justification">Detailed Justification:</label>
+            <textarea id="justification" name="justification" rows="4" required>The startup exceeded all primary efficiency targets during the 3-month pilot. Highly recommended for state-wide deployment across other municipal corporations.</textarea>
+        </div>
+
+        <button type="submit" class="btn-action warning">Submit Final Recommendation</button>
+    </form>
+</div>
+<script src="{{ url_for('static', filename='js/evaluator.js') }}"></script>
+{% endblock %}

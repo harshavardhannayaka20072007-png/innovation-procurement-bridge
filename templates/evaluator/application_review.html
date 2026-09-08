@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% block title %}Application Review | Innovation Procurement Bridge{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/evaluator.css') }}">
+
+<div class="eval-container">
+    <h2>Application Evaluation</h2>
+    <p class="subtitle">Review proposal details, verify system screening score, and submit qualitative scores.</p>
+
+    <div class="details-card">
+        <h3>Application #APP-101: EcoTech Solutions</h3>
+        <p><strong>Challenge:</strong> Smart Garbage Collection (Urban Development Dept)</p>
+        <p><strong>Proposed Solution:</strong> IoT-based route optimization algorithm for municipal garbage collection.</p>
+        <p><strong>Implementation Timeline:</strong> 3 Months Pilot</p>
+    </div>
+
+    <form id="evaluationForm" class="eval-form">
+        <input type="hidden" name="application_id" value="101">
+
+        <h3>Scoring Criteria</h3>
+        
+        <div class="form-group">
+            <label for="tech_fit">Technology Fit & Innovation (Max 25):</label>
+            <input type="number" id="tech_fit" name="tech_fit" max="25" min="0" value="23" required>
+        </div>
+
+        <div class="form-group">
+            <label for="feasibility">Technical Feasibility (Max 25):</label>
+            <input type="number" id="feasibility" name="feasibility" max="25" min="0" value="22" required>
+        </div>
+
+        <div class="form-group">
+            <label for="timeline">Timeline & Cost Realism (Max 25):</label>
+            <input type="number" id="timeline" name="timeline" max="25" min="0" value="20" required>
+        </div>
+
+        <div class="form-group">
+            <label for="capability">Team Capability & Experience (Max 25):</label>
+            <input type="number" id="capability" name="capability" max="25" min="0" value="24" required>
+        </div>
+
+        <div class="form-group">
+            <label for="comments">Evaluator Comments & Recommendations:</label>
+            <textarea id="comments" name="comments" rows="4" placeholder="Enter detailed technical feedback..." required>Strong proposal with proven prototype. Recommended for a 3-month pilot in Pune.</textarea>
+        </div>
+
+        <div class="btn-group">
+            <button type="submit" class="btn-action">Submit Evaluation & Recommend Pilot</button>
+            <a href="/evaluator/dashboard" class="btn-action secondary">Cancel</a>
+        </div>
+    </form>
+</div>
+<script src="{{ url_for('static', filename='js/evaluator.js') }}"></script>
+{% endblock %}

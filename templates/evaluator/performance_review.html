@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block title %}Performance KPIs | Innovation Procurement Bridge{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/evaluator.css') }}">
+
+<div class="eval-container">
+    <h2>Pilot KPI Performance Review</h2>
+    <p class="subtitle">Comparing target metrics against actual pilot outcomes.</p>
+
+    <div class="details-card">
+        <h3>Pilot PLT-501 Metrics</h3>
+        <p><strong>Startup:</strong> EcoTech Solutions | <strong>Duration:</strong> 3 Months</p>
+    </div>
+
+    <table class="eval-table">
+        <thead>
+            <tr>
+                <th>KPI Metric</th>
+                <th>Target</th>
+                <th>Actual Achieved</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Collection Time Reduction</td>
+                <td>20%</td>
+                <td>27%</td>
+                <td><span class="status-pass">Passed</span></td>
+            </tr>
+            <tr>
+                <td>Unnecessary Trip Reduction</td>
+                <td>15%</td>
+                <td>18%</td>
+                <td><span class="status-pass">Passed</span></td>
+            </tr>
+            <tr>
+                <td>Citizen Satisfaction Score</td>
+                <td>80%</td>
+                <td>85%</td>
+                <td><span class="status-pass">Passed</span></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div style="margin-top: 1.5rem;">
+        <a href="/evaluator/recommendation?pilot_id=501" class="btn-action">Proceed to Final Decision</a>
+    </div>
+</div>
+{% endblock %}
