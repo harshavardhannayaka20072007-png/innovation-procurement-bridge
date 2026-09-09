@@ -6,6 +6,8 @@ auth_bp = Blueprint('auth', __name__)
 
 @auth_bp.route('/login', methods=['GET', 'POST'])
 def login():
+    if request.method == 'GET' and session.get('user_id'):
+        return redirect(url_for('index'))
     if request.method == 'POST':
         email = request.form.get('email', '').strip()
         password = request.form.get('password', '').strip()
@@ -44,6 +46,11 @@ def login():
 @auth_bp.route('/demo-login/<role>')
 def demo_login(role):
     """Quick demo login helper for testing each role easily."""
+    if role not in {'government', 'startup', 'evaluator', 'admin'}:
+        return redirect(url_for('auth.login'))
+    if session.get('user_id'):
+        flash('Log out before choosing a different demo account.', 'warning')
+        return redirect(url_for('index'))
     user = query_db("SELECT * FROM users WHERE role = ? LIMIT 1", (role,), one=True)
     if user:
         session['user_id'] = user['user_id']

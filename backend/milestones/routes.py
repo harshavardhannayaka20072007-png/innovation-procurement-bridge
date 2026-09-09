@@ -51,6 +51,9 @@ def review_milestone(milestone_id):
         flash('Invalid milestone decision.', 'danger')
         return redirect(url_for('evaluator.milestone_review'))
     execute_db("UPDATE milestones SET status = ? WHERE milestone_id = ?", (status, milestone_id))
+    record_event('MILESTONE_REVIEWED', 'milestone', milestone_id, session, {
+        'status': status
+    })
     
     # Recalculate progress for pilot
     milestone = query_db("SELECT pilot_id FROM milestones WHERE milestone_id = ?", (milestone_id,), one=True)

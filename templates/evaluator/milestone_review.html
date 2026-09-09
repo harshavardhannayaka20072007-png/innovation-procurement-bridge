@@ -44,6 +44,8 @@
                       <span class="badge bg-success">Approved</span>
                     {% elif ms.status == 'Submitted' %}
                       <span class="badge bg-warning text-dark">Pending Review</span>
+                    {% elif ms.status == 'Rejected' %}
+                      <span class="badge bg-danger">Rejected</span>
                     {% else %}
                       <span class="badge bg-secondary">Pending</span>
                     {% endif %}

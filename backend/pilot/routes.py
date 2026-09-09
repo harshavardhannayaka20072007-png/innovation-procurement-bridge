@@ -1,9 +1,11 @@
 from flask import Blueprint, request, jsonify, redirect, url_for, flash
 from backend.db import query_db, execute_db
+from backend.auth.session import require_roles
 
 pilot_bp = Blueprint('pilot', __name__)
 
 @pilot_bp.route('/<int:pilot_id>/progress', methods=['POST'])
+@require_roles('government')
 def update_progress(pilot_id):
     progress = request.form.get('milestone_progress', type=int)
     status = request.form.get('status')

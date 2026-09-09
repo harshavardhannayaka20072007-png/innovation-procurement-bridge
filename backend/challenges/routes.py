@@ -55,7 +55,16 @@ def publish_challenge(challenge_id):
         flash('Challenge not found', 'danger')
         return redirect(url_for('government.challenges'))
 
+    if challenge['status'] == 'Published':
+        if request.is_json:
+            return jsonify({'message': 'Challenge is already published'}), 200
+        flash('Challenge is already published.', 'info')
+        return redirect(url_for('government.challenges'))
+
     execute_db("UPDATE challenges SET status = 'Published' WHERE challenge_id = ?", (challenge_id,))
+    record_event('CHALLENGE_PUBLISHED', 'challenge', challenge_id, session, {
+        'title': challenge['title'], 'department': challenge['department'], 'status': 'Published'
+    })
 
     if request.is_json:
         return jsonify({'message': 'Challenge published successfully'}), 200

@@ -1,9 +1,11 @@
 from flask import Blueprint, request, redirect, url_for, flash
 from backend.db import execute_db
+from backend.auth.session import require_roles
 
 performance_bp = Blueprint('performance', __name__)
 
 @performance_bp.route('/add', methods=['POST'])
+@require_roles('government')
 def add_performance():
     pilot_id = request.form.get('pilot_id', type=int)
     kpi_name = request.form.get('kpi_name')

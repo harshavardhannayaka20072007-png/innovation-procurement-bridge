@@ -1,11 +1,35 @@
 import os
-from flask import Flask, redirect, url_for, session
+from flask import Flask, flash, redirect, request, url_for, session
 from config import Config
 from backend.db import close_db, init_db, ensure_schema_extensions
 
 def create_app():
     app = Flask(__name__)
     app.config.from_object(Config)
+
+    protected_blueprints = {
+        'government': {'government'},
+        'startup': {'startup'},
+        'evaluator': {'evaluator'},
+        'admin': {'admin'},
+        'audit': {'government', 'admin'},
+    }
+
+    @app.before_request
+    def enforce_portal_role():
+        """Prevent URL guessing from bypassing role-specific portal access."""
+        blueprint = (request.endpoint or '').split('.', 1)[0]
+        allowed_roles = protected_blueprints.get(blueprint)
+        if not allowed_roles:
+            return None
+        role = session.get('role')
+        if not role:
+            flash('Please sign in to continue.', 'warning')
+            return redirect(url_for('auth.login'))
+        if role not in allowed_roles:
+            flash('Your account is not authorized to access that portal.', 'danger')
+            return redirect(url_for('index'))
+        return None
 
     # Teardown context for DB closure
     app.teardown_appcontext(close_db)
@@ -32,6 +56,7 @@ def create_app():
     from backend.evaluator_routes import evaluator_bp
     from backend.admin_routes import admin_bp
     from backend.assistant.routes import assistant_bp
+    from backend.chatbot.routes import chatbot_bp
     from backend.audit.routes import audit_bp
     from backend.evidence.routes import evidence_bp
 
@@ -47,6 +72,7 @@ def create_app():
     app.register_blueprint(evaluator_bp)
     app.register_blueprint(admin_bp)
     app.register_blueprint(assistant_bp, url_prefix='/assistant')
+    app.register_blueprint(chatbot_bp, url_prefix='/api/chatbot')
     app.register_blueprint(audit_bp)
     app.register_blueprint(evidence_bp, url_prefix='/evidence')
 
