@@ -8,13 +8,15 @@ block content %}
 <div class="startup-container">
   <div class="card">
     <h2>Startup Profile</h2>
-    <p>
-      Manage your official DPIIT registration details and startup information.
-    </p>
+    <p>View and manage your registered startup details.</p>
 
     {% if message %}
     <div class="alert alert-success" style="margin-bottom: 1rem">
       {{ message }}
+    </div>
+    {% endif %} {% if error %}
+    <div class="alert alert-danger" style="margin-bottom: 1rem">
+      {{ error }}
     </div>
     {% endif %}
 
@@ -25,21 +27,19 @@ block content %}
           type="text"
           id="startup_name"
           name="startup_name"
-          value="{{ profile.startup_name if profile else '' }}"
-          required
+          value="{{ profile.startup_name if profile and profile.startup_name else '' }}"
           placeholder="e.g. Acme Innovations Tech"
         />
       </div>
 
       <div class="form-group">
-        <label for="registration_number">DPIIT Registration Number</label>
+        <label for="registration_number">Registration Number</label>
         <input
           type="text"
           id="registration_number"
           name="registration_number"
-          value="{{ profile.registration_number if profile else '' }}"
-          required
-          placeholder="e.g. DIPP12345"
+          value="{{ profile.registration_number if profile and profile.registration_number else '' }}"
+          placeholder="e.g. REG12345"
         />
       </div>
 
@@ -49,9 +49,8 @@ block content %}
           type="text"
           id="technology_domain"
           name="technology_domain"
-          value="{{ profile.technology_domain if profile else '' }}"
-          required
-          placeholder="e.g. AI / Machine Learning, Cleantech"
+          value="{{ profile.technology_domain if profile and profile.technology_domain else '' }}"
+          placeholder="e.g. CleanTech, AI/ML"
         />
       </div>
 

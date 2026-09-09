@@ -29,7 +29,8 @@ document.addEventListener("DOMContentLoaded", function () {
           formResponse.innerHTML = `<div class="alert alert-success">${result.message || "Application submitted successfully!"}</div>`;
           applicationForm.reset();
         } else {
-          formResponse.innerHTML = `<div class="alert alert-danger">${result.message || "Failed to submit application."}</div>`;
+          const errorMessage = result.error || result.message || "Failed to submit application.";
+          formResponse.innerHTML = `<div class="alert alert-danger">${errorMessage}</div>`;
         }
       } catch (err) {
         console.error("Submission error:", err);
