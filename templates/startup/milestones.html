@@ -5,10 +5,14 @@
 <div class="container py-4">
   <div class="d-flex justify-content-between align-items-center mb-4">
     <div>
-      <h2 class="fw-bold mb-1">Pilot Milestones & Evidence</h2>
-      <p class="text-muted mb-0">Submit field reports, telemetry logs, and proof of deployment for verification.</p>
+      <span class="text-primary fw-bold small text-uppercase">Pilot delivery centre</span>
+      <h2 class="fw-bold mb-1">Milestones & Evidence</h2>
+      <p class="text-muted mb-0">Submit verifiable field reports and follow each approval decision in one place.</p>
     </div>
+    {% if pilot %}<a class="btn btn-outline-primary" href="{{ url_for('startup.pilot') }}"><i class="bi bi-arrow-left-circle me-1"></i>Back to pilot</a>{% endif %}
   </div>
+
+  {% if pilot %}<div class="alert alert-light border shadow-sm d-flex align-items-center gap-3 mb-4"><i class="bi bi-shield-check fs-3 text-success"></i><div><strong>{{ pilot.challenge_title }}</strong><br><small class="text-muted">Evidence files are retained in the procurement audit trail when submitted.</small></div><span class="ms-auto badge bg-primary-subtle text-primary">{{ pilot.milestone_progress }}% complete</span></div>{% endif %}
 
   {% if milestones %}
     <div class="card border-0 shadow-sm rounded-3">
@@ -43,7 +47,7 @@
                   </td>
                   <td>
                     {% if ms.evidence_file %}
-                      <span class="badge bg-light text-dark border"><i class="bi bi-file-earmark-pdf text-danger me-1"></i>{{ ms.evidence_file }}</span>
+                      <a class="btn btn-sm btn-outline-primary" target="_blank" href="{{ url_for('evidence.view_evidence', evidence_file=ms.evidence_file) }}"><i class="bi bi-file-earmark-pdf me-1"></i>Open evidence</a>
                     {% else %}
                       <span class="text-muted small">None</span>
                     {% endif %}
@@ -58,7 +62,7 @@
                       <div class="modal fade text-start" id="uploadModal{{ ms.milestone_id }}" tabindex="-1">
                         <div class="modal-dialog">
                           <div class="modal-content">
-                            <form action="{{ url_for('milestones.submit_milestone_evidence') }}" method="POST">
+                            <form action="{{ url_for('milestones.submit_milestone_evidence') }}" method="POST" enctype="multipart/form-data">
                               <div class="modal-header">
                                 <h5 class="modal-title fw-bold">Submit Evidence: {{ ms.title }}</h5>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
@@ -66,8 +70,9 @@
                               <div class="modal-body">
                                 <input type="hidden" name="milestone_id" value="{{ ms.milestone_id }}" />
                                 <div class="mb-3">
-                                  <label class="form-label fw-semibold">Evidence Document Name / URL</label>
-                                  <input type="text" name="evidence_file" class="form-control" placeholder="e.g. telemetry_verification_report.pdf" required />
+                                  <label class="form-label fw-semibold">Evidence Document</label>
+                                  <input type="file" name="evidence_document" class="form-control" accept=".pdf,.png,.jpg,.jpeg,.csv,.txt" required />
+                                  <div class="form-text">Accepted: PDF, image, CSV, or text file. Maximum size: 16 MB.</div>
                                 </div>
                               </div>
                               <div class="modal-footer">

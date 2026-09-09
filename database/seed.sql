@@ -31,7 +31,7 @@ INSERT INTO pilots (application_id, challenge_id, startup_id, startup_name, chal
 -- Insert Milestones
 INSERT INTO milestones (pilot_id, title, description, due_date, status, evidence_file) VALUES
 (1, 'Phase 1: Sensor Hardware Deployment', 'Deploy 25 IoT nodes in designated test villages in Konkan region.', '2026-08-25', 'Approved', 'milestone_1_report.pdf'),
-(1, 'Phase 2: Real-time Telemetry Dashboard Integration', 'Connect field sensors to Government Cloud dashboard with SLA alerts.', '2026-09-30', 'Submitted', 'dashboard_integration_proof.zip'),
+(1, 'Phase 2: Real-time Telemetry Dashboard Integration', 'Connect field sensors to Government Cloud dashboard with SLA alerts.', '2026-09-30', 'Submitted', 'dashboard_integration_proof.pdf'),
 (1, 'Phase 3: 60-Day Field Accuracy Verification', 'Demonstrate 98%+ measurement accuracy against lab water samples.', '2026-11-15', 'Pending', NULL);
 
 -- Insert Performance Records

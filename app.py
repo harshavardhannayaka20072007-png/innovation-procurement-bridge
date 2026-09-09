@@ -1,7 +1,7 @@
 import os
 from flask import Flask, redirect, url_for, session
 from config import Config
-from backend.db import close_db, init_db
+from backend.db import close_db, init_db, ensure_schema_extensions
 
 def create_app():
     app = Flask(__name__)
@@ -17,6 +17,7 @@ def create_app():
     if not os.path.exists(Config.DATABASE):
         with app.app_context():
             init_db()
+    ensure_schema_extensions()
 
     # Register Blueprints
     from backend.auth.routes import auth_bp
@@ -30,6 +31,9 @@ def create_app():
     from backend.startup_routes import startup_bp
     from backend.evaluator_routes import evaluator_bp
     from backend.admin_routes import admin_bp
+    from backend.assistant.routes import assistant_bp
+    from backend.audit.routes import audit_bp
+    from backend.evidence.routes import evidence_bp
 
     app.register_blueprint(auth_bp, url_prefix='/auth')
     app.register_blueprint(challenges_bp, url_prefix='/challenges')
@@ -42,6 +46,9 @@ def create_app():
     app.register_blueprint(startup_bp)
     app.register_blueprint(evaluator_bp)
     app.register_blueprint(admin_bp)
+    app.register_blueprint(assistant_bp, url_prefix='/assistant')
+    app.register_blueprint(audit_bp)
+    app.register_blueprint(evidence_bp, url_prefix='/evidence')
 
     @app.route('/')
     def index():

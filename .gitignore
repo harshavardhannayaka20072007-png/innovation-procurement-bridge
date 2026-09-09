@@ -7,4 +7,6 @@ __pycache__/
 database.db
 uploads/*
 !uploads/.gitkeep
+!uploads/evidence/
+!uploads/evidence/*.pdf
 .DS_Store

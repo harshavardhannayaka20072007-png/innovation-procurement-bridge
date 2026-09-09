@@ -1,9 +1,12 @@
 from flask import Blueprint, request, jsonify, redirect, url_for, session, flash
 from backend.db import query_db, execute_db
+from backend.auth.session import require_roles
+from backend.ledger import record_event
 
 challenges_bp = Blueprint('challenges', __name__)
 
 @challenges_bp.route('/', methods=['POST'])
+@require_roles('government')
 def create_challenge():
     if request.is_json:
         data = request.get_json()
@@ -32,6 +35,9 @@ def create_challenge():
            VALUES (?, ?, ?, ?, ?, 'Draft', ?)""",
         (title, department, description, requirements, deadline, created_by)
     )
+    record_event('CHALLENGE_CREATED', 'challenge', challenge_id, session, {
+        'title': title, 'department': department, 'deadline': deadline, 'status': 'Draft'
+    })
 
     if request.is_json:
         return jsonify({'message': 'Challenge created successfully', 'challenge_id': challenge_id}), 201
@@ -40,6 +46,7 @@ def create_challenge():
     return redirect(url_for('government.challenges'))
 
 @challenges_bp.route('/<int:challenge_id>/publish', methods=['PUT', 'POST'])
+@require_roles('government')
 def publish_challenge(challenge_id):
     challenge = query_db("SELECT * FROM challenges WHERE challenge_id = ?", (challenge_id,), one=True)
     if not challenge:

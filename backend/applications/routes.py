@@ -1,9 +1,12 @@
 from flask import Blueprint, request, jsonify, redirect, url_for, session, flash
 from backend.db import query_db, execute_db
+from backend.auth.session import require_roles
+from backend.ledger import record_event
 
 applications_bp = Blueprint('applications', __name__)
 
 @applications_bp.route('/', methods=['POST'])
+@require_roles('startup')
 def submit_application():
     challenge_id = request.form.get('challenge_id')
     proposal = request.form.get('proposal')
@@ -14,7 +17,7 @@ def submit_application():
         flash("Challenge not found.", "danger")
         return redirect(url_for('startup.challenges'))
         
-    startup_id = session.get('user_id', 2)
+    startup_id = session['user_id']
     startup_name = session.get('company_name') or session.get('username') or 'Startup Applicant'
     
     application_id = execute_db(
@@ -23,11 +26,15 @@ def submit_application():
            VALUES (?, ?, ?, ?, ?, ?, 'Submitted')""",
         (challenge_id, startup_id, startup_name, challenge['title'], description, proposal)
     )
+    record_event('APPLICATION_SUBMITTED', 'application', application_id, session, {
+        'challenge_id': challenge_id, 'challenge_title': challenge['title'], 'startup_name': startup_name
+    })
     
     flash("Application submitted successfully!", "success")
     return redirect(url_for('startup.applications'))
 
 @applications_bp.route('/<int:application_id>/status', methods=['POST', 'PUT'])
+@require_roles('government')
 def update_status(application_id):
     if request.is_json:
         data = request.get_json()

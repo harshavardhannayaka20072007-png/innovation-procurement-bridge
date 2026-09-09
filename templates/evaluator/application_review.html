@@ -6,12 +6,16 @@
   <div class="d-flex justify-content-between align-items-center mb-4">
     <div>
       <h2 class="fw-bold mb-1">Grade Startup Readiness</h2>
-      <p class="text-muted mb-0">Evaluating: <strong>{{ application.startup_name if application else '' }}</strong></p>
+      <p class="text-muted mb-0">Evaluating: <strong>{{ application.startup_name if application else '' }}</strong> · {{ application.status if application else '' }}</p>
     </div>
     <a href="{{ url_for('evaluator.dashboard') }}" class="btn btn-outline-secondary"><i class="bi bi-arrow-left me-1"></i> Back to Dashboard</a>
   </div>
 
   {% if application %}
+    <div class="evaluation-hero mb-4">
+      <div><span class="eyebrow">READINESS REVIEW</span><h4 class="mb-1">{{ application.challenge_title }}</h4><p class="mb-0">{{ application.startup_name }} · Application #APP-{{ application.application_id }}</p></div>
+      <div class="score-orb"><span id="totalScoreDisplay">0</span><small>/100</small></div>
+    </div>
     <div class="row g-4">
       <div class="col-lg-6">
         <div class="card border-0 shadow-sm rounded-3 mb-4">
@@ -37,61 +41,62 @@
 
       <div class="col-lg-6">
         <div class="card border-0 shadow-sm rounded-3">
-          <div class="card-header bg-primary text-white py-3 d-flex justify-content-between align-items-center">
+          <div class="card-header evaluator-card-header py-3 d-flex justify-content-between align-items-center">
             <h5 class="fw-bold mb-0"><i class="bi bi-sliders me-1"></i>5-Criteria Scoring Rubric</h5>
-            <div class="fs-5 fw-bold">Total: <span id="totalScoreDisplay">0</span>/100</div>
+            <div class="small fw-semibold">Five criteria · 20 points each</div>
           </div>
           <div class="card-body p-4">
             <form action="{{ url_for('evaluation.submit_evaluation') }}" method="POST">
               <input type="hidden" name="application_id" value="{{ application.application_id }}" />
 
-              <div class="mb-3">
+              {% set prior = previous_evaluation or application %}
+              <div class="score-field mb-3">
                 <label class="form-label fw-semibold d-flex justify-content-between">
                   <span>1. Startup Eligibility (DPIIT & Maharashtra Policy)</span>
                   <span class="text-primary fw-bold">Max 20</span>
                 </label>
-                <input type="number" name="eligibility_score" class="form-control score-input" min="0" max="20" value="{{ application.eligibility_score if application.eligibility_score is not none else 18 }}" required />
+                <input type="number" name="eligibility_score" class="form-control score-input" min="0" max="20" value="{{ prior.eligibility_score if prior.eligibility_score is not none else 0 }}" required />
               </div>
 
-              <div class="mb-3">
+              <div class="score-field mb-3">
                 <label class="form-label fw-semibold d-flex justify-content-between">
                   <span>2. Technology Readiness & TRL Level</span>
                   <span class="text-primary fw-bold">Max 20</span>
                 </label>
-                <input type="number" name="technology_score" class="form-control score-input" min="0" max="20" value="{{ application.technology_score if application.technology_score is not none else 18 }}" required />
+                <input type="number" name="technology_score" class="form-control score-input" min="0" max="20" value="{{ prior.technology_score if prior.technology_score is not none else 0 }}" required />
               </div>
 
-              <div class="mb-3">
+              <div class="score-field mb-3">
                 <label class="form-label fw-semibold d-flex justify-content-between">
                   <span>3. Solution Feasibility & Cost Model</span>
                   <span class="text-primary fw-bold">Max 20</span>
                 </label>
-                <input type="number" name="feasibility_score" class="form-control score-input" min="0" max="20" value="{{ application.feasibility_score if application.feasibility_score is not none else 17 }}" required />
+                <input type="number" name="feasibility_score" class="form-control score-input" min="0" max="20" value="{{ prior.feasibility_score if prior.feasibility_score is not none else 0 }}" required />
               </div>
 
-              <div class="mb-3">
+              <div class="score-field mb-3">
                 <label class="form-label fw-semibold d-flex justify-content-between">
                   <span>4. Deployment Timeline & Milestones</span>
                   <span class="text-primary fw-bold">Max 20</span>
                 </label>
-                <input type="number" name="timeline_score" class="form-control score-input" min="0" max="20" value="{{ application.timeline_score if application.timeline_score is not none else 16 }}" required />
+                <input type="number" name="timeline_score" class="form-control score-input" min="0" max="20" value="{{ prior.timeline_score if prior.timeline_score is not none else 0 }}" required />
               </div>
 
-              <div class="mb-3">
+              <div class="score-field mb-3">
                 <label class="form-label fw-semibold d-flex justify-content-between">
                   <span>5. Founder & Technical Team Experience</span>
                   <span class="text-primary fw-bold">Max 20</span>
                 </label>
-                <input type="number" name="experience_score" class="form-control score-input" min="0" max="20" value="{{ application.experience_score if application.experience_score is not none else 18 }}" required />
+                <input type="number" name="experience_score" class="form-control score-input" min="0" max="20" value="{{ prior.experience_score if prior.experience_score is not none else 0 }}" required />
               </div>
 
               <div class="mb-4">
                 <label class="form-label fw-semibold">Evaluator Comments & Recommendations</label>
-                <textarea name="comments" class="form-control" rows="3" placeholder="Provide qualitative feedback for government procurement committee..."></textarea>
+                <textarea name="comments" class="form-control" rows="3" placeholder="Provide qualitative feedback for government procurement committee...">{{ prior.comments or '' }}</textarea>
               </div>
 
               <button type="submit" class="btn btn-primary w-100 py-2 fw-bold">
-                <i class="bi bi-check-circle-fill me-1"></i> Submit Official Readiness Score
+                <i class="bi bi-check-circle-fill me-1"></i> Save Readiness Score
               </button>
             </form>
           </div>

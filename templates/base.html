@@ -13,6 +13,9 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <!-- Custom CSS -->
   <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
+  {% if session.get('role') == 'evaluator' %}
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/evaluator.css') }}" />
+  {% endif %}
   {% block extra_css %}{% endblock %}
 </head>
 <body>
@@ -38,7 +41,7 @@
   </div>
 
   <!-- Primary Navbar -->
-  <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm">
+  <nav class="navbar navbar-expand-lg navbar-dark portal-navbar shadow-sm">
     <div class="container-fluid">
       <a class="navbar-brand d-flex align-items-center" href="{{ url_for('index') }}">
         <i class="bi bi-building-gear fs-4 me-2 text-primary"></i>
@@ -57,6 +60,7 @@
             <li class="nav-item"><a class="nav-link" href="{{ url_for('government.application_list') }}"><i class="bi bi-file-earmark-text me-1"></i>Applications</a></li>
             <li class="nav-item"><a class="nav-link" href="{{ url_for('government.pilots') }}"><i class="bi bi-rocket-takeoff me-1"></i>Pilots</a></li>
             <li class="nav-item"><a class="nav-link" href="{{ url_for('government.startup_ranking') }}"><i class="bi bi-trophy me-1"></i>Readiness Ranking</a></li>
+            <li class="nav-item"><a class="nav-link" href="{{ url_for('audit.ledger') }}"><i class="bi bi-shield-check me-1"></i>Audit Ledger</a></li>
           {% elif role == 'startup' %}
             <li class="nav-item"><a class="nav-link" href="{{ url_for('startup.dashboard') }}"><i class="bi bi-speedometer2 me-1"></i>Dashboard</a></li>
             <li class="nav-item"><a class="nav-link" href="{{ url_for('startup.challenges') }}"><i class="bi bi-search me-1"></i>Browse Challenges</a></li>
@@ -74,6 +78,7 @@
             <li class="nav-item"><a class="nav-link" href="{{ url_for('admin.departments') }}"><i class="bi bi-building me-1"></i>Departments</a></li>
             <li class="nav-item"><a class="nav-link" href="{{ url_for('admin.challenges') }}"><i class="bi bi-journal-text me-1"></i>Challenges</a></li>
             <li class="nav-item"><a class="nav-link" href="{{ url_for('admin.startups') }}"><i class="bi bi-briefcase me-1"></i>Startups</a></li>
+            <li class="nav-item"><a class="nav-link" href="{{ url_for('audit.ledger') }}"><i class="bi bi-shield-check me-1"></i>Audit Ledger</a></li>
           {% endif %}
         </ul>
 
@@ -118,6 +123,28 @@
     {% block content %}{% endblock %}
   </div>
 
+  {% if session.get('username') %}
+  <aside class="portal-guide" aria-label="Portal guide">
+    <button class="portal-guide__toggle" id="guideToggle" type="button" aria-expanded="false" aria-controls="guidePanel">
+      <i class="bi bi-chat-square-text-fill"></i><span>Portal Guide</span>
+    </button>
+    <section class="portal-guide__panel" id="guidePanel" hidden>
+      <header>
+        <div class="guide-avatar"><i class="bi bi-compass-fill"></i></div>
+        <div><strong>Bridge Guide</strong><small>Uses your live portal records</small></div>
+        <button class="btn-close btn-close-white ms-auto" id="guideClose" type="button" aria-label="Close"></button>
+      </header>
+      <div class="portal-guide__messages" id="guideMessages">
+        <div class="guide-message guide-message--assistant">Hello {{ session.get('username') }}. Ask about applications, pilot progress, milestones, scores, or the audit ledger.</div>
+      </div>
+      <form class="portal-guide__form" id="guideForm">
+        <input id="guideInput" class="form-control" autocomplete="off" placeholder="How can I help?" maxlength="280" />
+        <button class="btn btn-primary" type="submit" aria-label="Send"><i class="bi bi-send-fill"></i></button>
+      </form>
+    </section>
+  </aside>
+  {% endif %}
+
   <!-- Footer -->
   <footer class="py-3 mt-5 border-top">
     <div class="container text-center">
@@ -131,6 +158,7 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
   <!-- Custom JS -->
   <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+  {% if session.get('username') %}<script src="{{ url_for('static', filename='js/assistant.js') }}"></script>{% endif %}
   {% block extra_js %}{% endblock %}
 </body>
 </html>

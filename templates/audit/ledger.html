@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block title %}Procurement Audit Ledger - Innovation Procurement Bridge{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+  <div class="d-flex flex-wrap justify-content-between align-items-end gap-3 mb-4">
+    <div>
+      <span class="text-primary fw-bold small text-uppercase">Integrity & accountability</span>
+      <h2 class="fw-bold mb-1"><i class="bi bi-shield-check text-success me-2"></i>Procurement Audit Ledger</h2>
+      <p class="text-muted mb-0">Each key action is cryptographically linked to the previous record. Sensitive files remain off-chain.</p>
+    </div>
+    <span class="badge bg-success-subtle text-success border border-success-subtle px-3 py-2"><i class="bi bi-lock-fill me-1"></i>Tamper-evident record chain</span>
+  </div>
+
+  <div class="row g-3 mb-4">
+    <div class="col-md-4"><div class="card h-100"><div class="card-body"><small class="text-muted text-uppercase fw-bold">Sealed records</small><div class="display-6 fw-bold text-primary">{{ records|length }}</div><small>Latest 100 records shown</small></div></div></div>
+    <div class="col-md-8"><div class="card h-100"><div class="card-body d-flex align-items-center gap-3"><i class="bi bi-ethereum fs-2 text-primary"></i><div><strong>Ethereum anchor readiness</strong><p class="small text-muted mb-0">Records are sealed locally by default. Configure WEB3_RPC_URL, ETHEREUM_AUDIT_CONTRACT, and ETHEREUM_PRIVATE_KEY to publish record hashes to your deployed audit contract.</p></div></div></div></div>
+  </div>
+
+  <div class="card overflow-hidden">
+    <div class="card-header bg-white py-3"><strong>Sealed procurement events</strong></div>
+    <div class="table-responsive">
+      <table class="table table-hover align-middle mb-0">
+        <thead><tr><th class="ps-4">Event</th><th>Actor</th><th>Record</th><th>Anchor</th><th>Time</th></tr></thead>
+        <tbody>
+        {% for record in records %}
+          <tr>
+            <td class="ps-4"><span class="fw-bold d-block">{{ record.event_type.replace('_', ' ').title() }}</span><small class="text-muted">{{ record.entity_type.title() }} #{{ record.entity_id }}</small></td>
+            <td><span class="fw-semibold">{{ record.actor_name or 'System' }}</span><small class="d-block text-muted">{{ record.actor_role or 'service' }}</small></td>
+            <td><code class="small">{{ record.record_hash[:12] }}...{{ record.record_hash[-8:] }}</code></td>
+            <td><span class="badge {{ 'bg-success' if record.anchor_status == 'ETHEREUM_CONFIRMED' else 'bg-primary-subtle text-primary' }}">{{ record.anchor_status.replace('_', ' ') }}</span>{% if record.transaction_hash %}<small class="d-block text-muted mt-1">{{ record.transaction_hash[:10] }}...</small>{% endif %}</td>
+            <td class="text-muted small">{{ record.created_at }}</td>
+          </tr>
+        {% else %}
+          <tr><td colspan="5" class="text-center text-muted py-5"><i class="bi bi-journal-plus fs-3 d-block mb-2"></i>New challenge, proposal, and evidence submissions will appear here as sealed records.</td></tr>
+        {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}

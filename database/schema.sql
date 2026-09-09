@@ -1,6 +1,7 @@
 -- Database Schema for Innovation Procurement Bridge (SIH 2026)
 
 DROP TABLE IF EXISTS performance;
+DROP TABLE IF EXISTS audit_records;
 DROP TABLE IF EXISTS milestones;
 DROP TABLE IF EXISTS pilots;
 DROP TABLE IF EXISTS evaluations;
@@ -106,4 +107,20 @@ CREATE TABLE performance (
     remarks TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (pilot_id) REFERENCES pilots(pilot_id)
+);
+
+CREATE TABLE audit_records (
+    record_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    event_type VARCHAR(80) NOT NULL,
+    entity_type VARCHAR(80) NOT NULL,
+    entity_id INTEGER NOT NULL,
+    actor_id INTEGER,
+    actor_name VARCHAR(150),
+    actor_role VARCHAR(50),
+    payload TEXT NOT NULL,
+    previous_hash VARCHAR(64) NOT NULL,
+    record_hash VARCHAR(64) NOT NULL UNIQUE,
+    anchor_status VARCHAR(50) NOT NULL DEFAULT 'LOCAL_SEALED',
+    transaction_hash VARCHAR(100),
+    created_at TIMESTAMP NOT NULL
 );

@@ -38,6 +38,29 @@ def init_db():
     db.close()
     print("Database initialized and seeded successfully.")
 
+def ensure_schema_extensions():
+    """Apply additive schema changes to an existing local demo database."""
+    db = sqlite3.connect(Config.DATABASE)
+    db.execute('''CREATE TABLE IF NOT EXISTS audit_records (
+        record_id INTEGER PRIMARY KEY AUTOINCREMENT,
+        event_type VARCHAR(80) NOT NULL,
+        entity_type VARCHAR(80) NOT NULL,
+        entity_id INTEGER NOT NULL,
+        actor_id INTEGER,
+        actor_name VARCHAR(150),
+        actor_role VARCHAR(50),
+        payload TEXT NOT NULL,
+        previous_hash VARCHAR(64) NOT NULL,
+        record_hash VARCHAR(64) NOT NULL UNIQUE,
+        anchor_status VARCHAR(50) NOT NULL DEFAULT 'LOCAL_SEALED',
+        transaction_hash VARCHAR(100),
+        created_at TIMESTAMP NOT NULL
+    )''')
+    # Earlier demo data pointed to a non-viewable ZIP placeholder. Keep it usable after upgrade.
+    db.execute("UPDATE milestones SET evidence_file = 'dashboard_integration_proof.pdf' WHERE evidence_file = 'dashboard_integration_proof.zip'")
+    db.commit()
+    db.close()
+
 def query_db(query, args=(), one=False):
     """Helper query function that converts rows into standard Python dictionaries."""
     cur = get_db().execute(query, args)

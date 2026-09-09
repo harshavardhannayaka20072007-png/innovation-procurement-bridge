@@ -1,18 +1,20 @@
 /* Global Styling for Innovation Procurement Bridge (SIH 2026) */
 
 :root {
-  --primary-color: #0d6efd;
-  --primary-hover: #0b5ed7;
-  --secondary-color: #495057;
-  --bg-gradient: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-  --nav-bg: #1e293b;
-  --card-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+  --primary-color: #0a4f8f;
+  --primary-hover: #073d70;
+  --secondary-color: #496274;
+  --bg-gradient: linear-gradient(135deg, #f4f8fb 0%, #e9f0f5 100%);
+  --nav-bg: #062b52;
+  --card-shadow: 0 8px 24px rgba(10, 49, 83, 0.08);
+  --gov-gold: #d79426;
+  --gov-green: #1e7667;
 }
 
 body {
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-  background-color: #f4f6f9;
-  color: #212529;
+  background: var(--bg-gradient);
+  color: #1c2f3d;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -20,6 +22,7 @@ body {
 
 .main-content {
   flex: 1;
+  padding-bottom: 2rem;
 }
 
 /* Navbar Branding */
@@ -29,14 +32,29 @@ body {
 }
 
 .navbar-brand span {
-  color: #38bdf8;
+  color: #8bd6ff;
 }
+
+.portal-navbar { background: linear-gradient(110deg, #05294e, #0a4f8f) !important; border-bottom: 3px solid var(--gov-gold); }
+.portal-navbar .nav-link { border-radius: .45rem; color: rgba(255,255,255,.82) !important; font-size: .9rem; margin: 0 .1rem; padding: .55rem .65rem !important; }
+.portal-navbar .nav-link:hover { background: rgba(255,255,255,.12); color: #fff !important; }
+.btn-primary { background-color: var(--primary-color); border-color: var(--primary-color); box-shadow: 0 4px 10px rgba(10,79,143,.18); }
+.btn-primary:hover, .btn-primary:focus { background-color: var(--primary-hover); border-color: var(--primary-hover); transform: translateY(-1px); }
+.btn { border-radius: .55rem; font-weight: 600; transition: .18s ease; }
+.form-control, .form-select { border-color: #c9d7e1; border-radius: .55rem; min-height: 42px; }
+.form-control:focus, .form-select:focus { border-color: #4d93c5; box-shadow: 0 0 0 .2rem rgba(10,79,143,.12); }
 
 /* Cards & Elevated UI */
 .card {
   border: none;
+  border-radius: .9rem;
+  box-shadow: var(--card-shadow);
   transition: transform 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
 }
+
+.card-header { border-bottom: 1px solid #e4edf3; }
+.table > :not(caption) > * > * { padding: .9rem .75rem; }
+.table thead th { background: #edf4f8; color: #345268; font-size: .72rem; letter-spacing: .045em; text-transform: uppercase; }
 
 .card-hover:hover {
   transform: translateY(-2px);
@@ -61,8 +79,8 @@ body {
 
 /* Demo Role Switcher Bar */
 .demo-role-bar {
-  background: #0f172a;
-  color: #94a3b8;
+  background: #031e3a;
+  color: #bfd3e1;
   font-size: 0.85rem;
 }
 
@@ -86,6 +104,22 @@ body {
 
 /* Footer */
 footer {
-  background: #0f172a;
-  color: #94a3b8;
+  background: #031e3a;
+  color: #b9cfdd;
 }
+
+.portal-guide { bottom: 1.25rem; position: fixed; right: 1.25rem; z-index: 1050; }
+.portal-guide__toggle { align-items: center; background: linear-gradient(135deg, #0a4f8f, #167a93); border: 2px solid rgba(255,255,255,.75); border-radius: 999px; box-shadow: 0 12px 30px rgba(3,42,78,.25); color: white; display: flex; font-weight: 700; gap: .55rem; padding: .72rem 1rem; }
+.portal-guide__toggle:hover { background: #073d70; }
+.portal-guide__panel { background: white; border: 1px solid #d9e6ee; border-radius: 1rem; bottom: 4rem; box-shadow: 0 18px 45px rgba(3,42,78,.22); overflow: hidden; position: absolute; right: 0; width: min(360px, calc(100vw - 2.5rem)); }
+.portal-guide__panel header { align-items: center; background: linear-gradient(120deg, #062b52, #0a6092); color: white; display: flex; gap: .65rem; padding: 1rem; }
+.portal-guide__panel header small { color: #c7e9f9; display: block; font-size: .73rem; }
+.guide-avatar { align-items: center; background: rgba(255,255,255,.16); border-radius: 50%; display: flex; height: 34px; justify-content: center; width: 34px; }
+.portal-guide__messages { background: #f4f8fb; display: flex; flex-direction: column; gap: .6rem; height: 270px; overflow-y: auto; padding: 1rem; }
+.guide-message { border-radius: .7rem; font-size: .87rem; line-height: 1.45; max-width: 88%; padding: .65rem .75rem; white-space: pre-wrap; }
+.guide-message--assistant { align-self: flex-start; background: white; border: 1px solid #dce8ef; color: #294454; }
+.guide-message--user { align-self: flex-end; background: #dbeefa; color: #063a65; }
+.guide-link { color: #075f9d; display: block; font-weight: 700; margin-top: .45rem; text-decoration: none; }
+.portal-guide__form { background: white; border-top: 1px solid #e0eaf0; display: flex; gap: .5rem; padding: .75rem; }
+.portal-guide__form .form-control { min-height: 38px; }
+@media (max-width: 767px) { .demo-role-bar .container-fluid { align-items: flex-start !important; flex-direction: column; gap: .35rem; } .portal-guide__toggle span { display: none; } }

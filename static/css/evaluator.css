@@ -3,3 +3,14 @@
   background: #f8fafc;
   border-left: 4px solid #0284c7;
 }
+
+.evaluation-hero { align-items: center; background: linear-gradient(120deg, #0f2e58, #166b8f); border-radius: 18px; color: #fff; display: flex; justify-content: space-between; padding: 1.5rem 1.75rem; }
+.evaluation-hero p { color: #c7e7f4; }
+.eyebrow { color: #7dd3fc; font-size: .72rem; font-weight: 800; letter-spacing: .13em; }
+.score-orb { align-items: baseline; background: rgba(255,255,255,.14); border: 1px solid rgba(255,255,255,.24); border-radius: 50%; display: flex; height: 92px; justify-content: center; width: 92px; }
+.score-orb span { font-size: 2rem; font-weight: 800; line-height: 90px; }
+.score-orb small { align-self: center; color: #bae6fd; font-weight: 700; margin-top: 20px; }
+.evaluator-card-header { background: #0f2e58; color: white; }
+.score-field { background: #f8fbfd; border: 1px solid #e3edf4; border-radius: 12px; padding: .85rem 1rem; }
+.score-field .form-control { border-color: #b9d4e3; font-weight: 700; max-width: 110px; }
+@media (max-width: 576px) { .evaluation-hero { align-items: flex-start; gap: 1rem; padding: 1.25rem; } .score-orb { flex: 0 0 76px; height: 76px; width: 76px; } .score-orb span { line-height: 74px; } }

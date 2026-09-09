@@ -6,7 +6,7 @@
   <div class="d-flex justify-content-between align-items-center mb-4">
     <div>
       <h2 class="fw-bold mb-1"><i class="bi bi-clipboard-check text-warning me-2"></i>Technical Evaluation Board</h2>
-      <p class="text-muted mb-0">Grade proposals across 5 readiness criteria and verify field pilot milestones.</p>
+      <p class="text-muted mb-0">Score new proposals, revisit shortlisted submissions, and verify field-pilot milestones.</p>
     </div>
   </div>
 
@@ -15,9 +15,9 @@
     <div class="col-md-4">
       <div class="card border-0 shadow-sm rounded-3">
         <div class="card-body">
-          <span class="text-muted small fw-semibold">Pending Proposals for Review</span>
+          <span class="text-muted small fw-semibold">Proposals Available for Review</span>
           <h3 class="fw-bold my-2 text-warning">{{ pending_applications | length }}</h3>
-          <span class="badge bg-warning-subtle text-warning">Needs Scoring</span>
+          <span class="badge bg-warning-subtle text-warning">Open review queue</span>
         </div>
       </div>
     </div>
@@ -44,7 +44,7 @@
   <!-- Pending Applications Queue -->
   <div class="card border-0 shadow-sm rounded-3 mb-4">
     <div class="card-header bg-white py-3">
-      <h5 class="fw-bold mb-0"><i class="bi bi-list-stars me-2 text-primary"></i>Pending Application Scoring Queue</h5>
+      <h5 class="fw-bold mb-0"><i class="bi bi-list-stars me-2 text-primary"></i>Application Scoring Queue</h5>
     </div>
     <div class="card-body p-0">
       <div class="table-responsive">
@@ -65,17 +65,20 @@
                   <td class="ps-4 fw-semibold">#APP-{{ app.application_id }}</td>
                   <td class="fw-bold">{{ app.startup_name }}</td>
                   <td>{{ app.challenge_title }}</td>
-                  <td><span class="badge bg-warning text-dark">{{ app.status }}</span></td>
+                  <td>
+                    <span class="badge {{ 'bg-success' if app.status == 'Shortlisted' else 'bg-warning text-dark' }}">{{ app.status }}</span>
+                    {% if app.total_score is not none %}<small class="d-block text-muted mt-1">Current: {{ app.total_score }}/100</small>{% endif %}
+                  </td>
                   <td>
                     <a href="{{ url_for('evaluator.application_review', application_id=app.application_id) }}" class="btn btn-sm btn-primary fw-bold">
-                      <i class="bi bi-pencil-square me-1"></i> Grade & Score
+                      <i class="bi bi-pencil-square me-1"></i> {{ 'Review Score' if app.total_score is not none else 'Grade & Score' }}
                     </a>
                   </td>
                 </tr>
               {% endfor %}
             {% else %}
               <tr>
-                <td colspan="5" class="text-center py-4 text-muted">No pending applications to evaluate right now.</td>
+                <td colspan="5" class="text-center py-4 text-muted">No proposals are waiting for review right now.</td>
               </tr>
             {% endif %}
           </tbody>
