@@ -1,0 +1,134 @@
+{% extends "base.html" %}
+{% block title %}Startup Portal Dashboard - Innovation Procurement Bridge{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4">
+  <!-- Hero Welcome Card -->
+  <div class="card startup-hero p-4 mb-4 border-0 shadow">
+    <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+      <div>
+        <h2 class="fw-bold mb-1"><i class="bi bi-rocket-takeoff text-info me-2"></i>Welcome, {{ session.get('company_name', 'Startup Partner') }}!</h2>
+        <p class="mb-0 text-white-50">Empowering Maharashtra's innovators to solve state government procurement challenges.</p>
+      </div>
+      <a href="{{ url_for('startup.challenges') }}" class="btn btn-info text-dark fw-bold px-4">
+        <i class="bi bi-search me-1"></i> Browse Govt Challenges
+      </a>
+    </div>
+  </div>
+
+  <!-- Key Metrics Overview -->
+  <div class="row g-3 mb-4">
+    <div class="col-md-4">
+      <div class="card border-0 shadow-sm rounded-3 h-100">
+        <div class="card-body">
+          <span class="text-muted fw-semibold small">My Active Submissions</span>
+          <h3 class="fw-bold my-2 text-primary">{{ applications | length }}</h3>
+          <span class="badge bg-primary-subtle text-primary">Proposals Submitted</span>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card border-0 shadow-sm rounded-3 h-100">
+        <div class="card-body">
+          <span class="text-muted fw-semibold small">Active Pilot Program</span>
+          <h3 class="fw-bold my-2 text-success">{{ 1 if pilot else 0 }}</h3>
+          <span class="badge bg-success-subtle text-success">{{ pilot.status if pilot else 'No Pilot Active' }}</span>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card border-0 shadow-sm rounded-3 h-100">
+        <div class="card-body">
+          <span class="text-muted fw-semibold small">Active Pilot Milestone Progress</span>
+          <h3 class="fw-bold my-2 text-warning">{{ pilot.milestone_progress if pilot else 0 }}%</h3>
+          <div class="progress" style="height: 6px;">
+            <div class="progress-bar bg-warning" role="progressbar" style="width: {{ pilot.milestone_progress if pilot else 0 }}%"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Content Row -->
+  <div class="row g-4">
+    <!-- Published Challenges Feed -->
+    <div class="col-lg-7">
+      <div class="card border-0 shadow-sm rounded-3 mb-4">
+        <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
+          <h5 class="fw-bold mb-0"><i class="bi bi-megaphone me-2 text-primary"></i>Latest Govt Challenges</h5>
+          <a href="{{ url_for('startup.challenges') }}" class="btn btn-sm btn-outline-primary">View All</a>
+        </div>
+        <div class="card-body p-0">
+          <div class="list-group list-group-flush">
+            {% if challenges %}
+              {% for challenge in challenges %}
+                <div class="list-group-item p-3">
+                  <div class="d-flex justify-content-between align-items-start mb-2">
+                    <h6 class="fw-bold mb-0">{{ challenge.title }}</h6>
+                    <span class="badge bg-info-subtle text-info">{{ challenge.department }}</span>
+                  </div>
+                  <p class="text-muted small mb-2 text-truncate" style="max-width: 500px;">{{ challenge.description }}</p>
+                  <div class="d-flex justify-content-between align-items-center">
+                    <small class="text-muted"><i class="bi bi-calendar-event me-1"></i>Deadline: {{ challenge.deadline }}</small>
+                    <a href="{{ url_for('startup.challenge_details', challenge_id=challenge.challenge_id) }}" class="btn btn-sm btn-primary">
+                      View & Apply <i class="bi bi-arrow-right ms-1"></i>
+                    </a>
+                  </div>
+                </div>
+              {% endfor %}
+            {% else %}
+              <div class="p-4 text-center text-muted">No active challenges available right now.</div>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- My Applications Quick Status -->
+    <div class="col-lg-5">
+      <div class="card border-0 shadow-sm rounded-3">
+        <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
+          <h5 class="fw-bold mb-0"><i class="bi bi-folder-check me-2 text-success"></i>My Applications</h5>
+          <a href="{{ url_for('startup.applications') }}" class="btn btn-sm btn-outline-secondary">View All</a>
+        </div>
+        <div class="card-body p-0">
+          <div class="table-responsive">
+            <table class="table align-middle mb-0">
+              <thead class="table-light">
+                <tr>
+                  <th>Challenge</th>
+                  <th>Status</th>
+                  <th>Score</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% if applications %}
+                  {% for app in applications %}
+                    <tr>
+                      <td class="fw-semibold small">{{ app.challenge_title }}</td>
+                      <td>
+                        <span class="badge bg-secondary-subtle text-secondary">{{ app.status }}</span>
+                      </td>
+                      <td>
+                        {% if app.total_score %}
+                          <span class="badge bg-primary fw-bold">{{ app.total_score }}/100</span>
+                        {% else %}
+                          <span class="text-muted small">Pending</span>
+                        {% endif %}
+                      </td>
+                    </tr>
+                  {% endfor %}
+                {% else %}
+                  <tr>
+                    <td colspan="3" class="text-center py-4 text-muted">No applications submitted yet.</td>
+                  </tr>
+                {% endif %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

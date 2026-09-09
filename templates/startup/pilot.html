@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% block title %}My Pilot Program - Innovation Procurement Bridge{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+      <h2 class="fw-bold mb-1">My Active Pilot Program</h2>
+      <p class="text-muted mb-0">Track real-world field deployment progress and government milestones.</p>
+    </div>
+    <a href="{{ url_for('startup.milestones') }}" class="btn btn-primary"><i class="bi bi-upload me-1"></i> Submit Milestone Proof</a>
+  </div>
+
+  {% if pilots %}
+    {% for pilot in pilots %}
+      <div class="card border-0 shadow-sm rounded-3 mb-4">
+        <div class="card-body p-4">
+          <div class="d-flex justify-content-between align-items-start mb-3">
+            <div>
+              <span class="badge bg-success mb-2">{{ pilot.status }} Pilot</span>
+              <h4 class="fw-bold">{{ pilot.challenge_title }}</h4>
+            </div>
+            <div class="text-end">
+              <span class="text-muted small d-block">Overall Completion</span>
+              <span class="fs-4 fw-bold text-primary">{{ pilot.milestone_progress }}%</span>
+            </div>
+          </div>
+
+          <div class="progress mb-4" style="height: 12px;">
+            <div class="progress-bar bg-success progress-bar-striped progress-bar-animated" role="progressbar" style="width: {{ pilot.milestone_progress }}%;"></div>
+          </div>
+
+          <div class="row g-3">
+            <div class="col-md-4">
+              <div class="border rounded-3 p-3 bg-light">
+                <small class="text-muted d-block">Start Date</small>
+                <strong>{{ pilot.start_date }}</strong>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="border rounded-3 p-3 bg-light">
+                <small class="text-muted d-block">Target End Date</small>
+                <strong>{{ pilot.end_date if pilot.end_date else '2026-11-30' }}</strong>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="border rounded-3 p-3 bg-light">
+                <small class="text-muted d-block">Monitoring Agency</small>
+                <strong>Government of Maharashtra</strong>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+  {% else %}
+    <div class="card border-0 shadow-sm rounded-3">
+      <div class="card-body text-center py-5">
+        <i class="bi bi-rocket fs-1 text-muted"></i>
+        <h5 class="fw-bold mt-3">No Active Pilots Yet</h5>
+        <p class="text-muted mb-0">Once your application is approved by government officers, your pilot program will appear here.</p>
+      </div>
+    </div>
+  {% endif %}
+</div>
+{% endblock %}

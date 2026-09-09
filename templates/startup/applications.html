@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+{% block title %}My Applications - Innovation Procurement Bridge{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+      <h2 class="fw-bold mb-1">My Submitted Applications</h2>
+      <p class="text-muted mb-0">Track proposal evaluation status and readiness scores.</p>
+    </div>
+    <a href="{{ url_for('startup.challenges') }}" class="btn btn-primary"><i class="bi bi-plus-circle me-1"></i> Apply for New Challenge</a>
+  </div>
+
+  <div class="card border-0 shadow-sm rounded-3">
+    <div class="card-body p-0">
+      <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0">
+          <thead class="table-light">
+            <tr>
+              <th class="ps-4">App ID</th>
+              <th>Challenge Title</th>
+              <th>Status</th>
+              <th>Readiness Score</th>
+              <th class="text-end pe-4">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% if applications %}
+              {% for app in applications %}
+                <tr>
+                  <td class="ps-4 fw-semibold">#APP-{{ app.application_id }}</td>
+                  <td class="fw-bold">{{ app.challenge_title }}</td>
+                  <td>
+                    {% if app.status == 'Approved for Pilot' %}
+                      <span class="badge bg-success">{{ app.status }}</span>
+                    {% elif app.status == 'Shortlisted' %}
+                      <span class="badge bg-primary">{{ app.status }}</span>
+                    {% elif app.status == 'Under Review' %}
+                      <span class="badge bg-warning text-dark">{{ app.status }}</span>
+                    {% else %}
+                      <span class="badge bg-secondary">{{ app.status }}</span>
+                    {% endif %}
+                  </td>
+                  <td>
+                    {% if app.total_score is not none %}
+                      <span class="badge bg-primary fs-6">{{ app.total_score }}/100</span>
+                    {% else %}
+                      <span class="text-muted small">Pending Evaluation</span>
+                    {% endif %}
+                  </td>
+                  <td class="text-end pe-4">
+                    <a href="{{ url_for('startup.application_details', application_id=app.application_id) }}" class="btn btn-sm btn-outline-primary">
+                      View Proposal & Feedback
+                    </a>
+                  </td>
+                </tr>
+              {% endfor %}
+            {% else %}
+              <tr>
+                <td colspan="5" class="text-center py-5 text-muted">You have not submitted any applications yet.</td>
+              </tr>
+            {% endif %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

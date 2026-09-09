@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+{% block title %}Milestones & Proof Upload - Innovation Procurement Bridge{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+      <h2 class="fw-bold mb-1">Pilot Milestones & Evidence</h2>
+      <p class="text-muted mb-0">Submit field reports, telemetry logs, and proof of deployment for verification.</p>
+    </div>
+  </div>
+
+  {% if milestones %}
+    <div class="card border-0 shadow-sm rounded-3">
+      <div class="card-body p-0">
+        <div class="table-responsive">
+          <table class="table align-middle mb-0">
+            <thead class="table-light">
+              <tr>
+                <th class="ps-4">Milestone</th>
+                <th>Due Date</th>
+                <th>Status</th>
+                <th>Submitted Evidence</th>
+                <th class="text-end pe-4">Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for ms in milestones %}
+                <tr>
+                  <td class="ps-4">
+                    <h6 class="fw-bold mb-1">{{ ms.title }}</h6>
+                    <small class="text-muted">{{ ms.description }}</small>
+                  </td>
+                  <td>{{ ms.due_date }}</td>
+                  <td>
+                    {% if ms.status == 'Approved' %}
+                      <span class="badge bg-success"><i class="bi bi-check-circle me-1"></i>Approved</span>
+                    {% elif ms.status == 'Submitted' %}
+                      <span class="badge bg-warning text-dark"><i class="bi bi-clock me-1"></i>Under Verification</span>
+                    {% else %}
+                      <span class="badge bg-secondary">Pending Upload</span>
+                    {% endif %}
+                  </td>
+                  <td>
+                    {% if ms.evidence_file %}
+                      <span class="badge bg-light text-dark border"><i class="bi bi-file-earmark-pdf text-danger me-1"></i>{{ ms.evidence_file }}</span>
+                    {% else %}
+                      <span class="text-muted small">None</span>
+                    {% endif %}
+                  </td>
+                  <td class="text-end pe-4">
+                    {% if ms.status != 'Approved' %}
+                      <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#uploadModal{{ ms.milestone_id }}">
+                        Upload Proof
+                      </button>
+
+                      <!-- Modal for upload -->
+                      <div class="modal fade text-start" id="uploadModal{{ ms.milestone_id }}" tabindex="-1">
+                        <div class="modal-dialog">
+                          <div class="modal-content">
+                            <form action="{{ url_for('milestones.submit_milestone_evidence') }}" method="POST">
+                              <div class="modal-header">
+                                <h5 class="modal-title fw-bold">Submit Evidence: {{ ms.title }}</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                              </div>
+                              <div class="modal-body">
+                                <input type="hidden" name="milestone_id" value="{{ ms.milestone_id }}" />
+                                <div class="mb-3">
+                                  <label class="form-label fw-semibold">Evidence Document Name / URL</label>
+                                  <input type="text" name="evidence_file" class="form-control" placeholder="e.g. telemetry_verification_report.pdf" required />
+                                </div>
+                              </div>
+                              <div class="modal-footer">
+                                <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
+                                <button type="submit" class="btn btn-primary fw-bold">Submit Evidence</button>
+                              </div>
+                            </form>
+                          </div>
+                        </div>
+                      </div>
+                    {% else %}
+                      <span class="text-muted"><i class="bi bi-lock-fill"></i> Completed</span>
+                    {% endif %}
+                  </td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  {% else %}
+    <div class="alert alert-info">No milestones defined for your pilot program yet.</div>
+  {% endif %}
+</div>
+{% endblock %}

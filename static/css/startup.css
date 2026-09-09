@@ -1,0 +1,12 @@
+/* Startup Portal CSS */
+.startup-hero {
+  background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+  color: white;
+  border-radius: 12px;
+}
+.score-badge {
+  font-size: 1.25rem;
+  font-weight: 700;
+  padding: 0.5rem 1rem;
+  border-radius: 50px;
+}

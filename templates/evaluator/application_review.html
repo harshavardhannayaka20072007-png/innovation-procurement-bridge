@@ -1,0 +1,109 @@
+{% extends "base.html" %}
+{% block title %}Evaluate Application - Innovation Procurement Bridge{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+      <h2 class="fw-bold mb-1">Grade Startup Readiness</h2>
+      <p class="text-muted mb-0">Evaluating: <strong>{{ application.startup_name if application else '' }}</strong></p>
+    </div>
+    <a href="{{ url_for('evaluator.dashboard') }}" class="btn btn-outline-secondary"><i class="bi bi-arrow-left me-1"></i> Back to Dashboard</a>
+  </div>
+
+  {% if application %}
+    <div class="row g-4">
+      <div class="col-lg-6">
+        <div class="card border-0 shadow-sm rounded-3 mb-4">
+          <div class="card-header bg-white py-3">
+            <h5 class="fw-bold mb-0">Proposal Details</h5>
+          </div>
+          <div class="card-body">
+            <div class="mb-3">
+              <label class="text-muted small">Challenge Statement</label>
+              <h6 class="fw-bold">{{ application.challenge_title }}</h6>
+            </div>
+            <div class="mb-3">
+              <label class="text-muted small">Startup Summary</label>
+              <p>{{ application.description }}</p>
+            </div>
+            <div>
+              <label class="text-muted small">Full Proposal</label>
+              <div class="bg-light p-3 rounded-3 small">{{ application.proposal }}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-6">
+        <div class="card border-0 shadow-sm rounded-3">
+          <div class="card-header bg-primary text-white py-3 d-flex justify-content-between align-items-center">
+            <h5 class="fw-bold mb-0"><i class="bi bi-sliders me-1"></i>5-Criteria Scoring Rubric</h5>
+            <div class="fs-5 fw-bold">Total: <span id="totalScoreDisplay">0</span>/100</div>
+          </div>
+          <div class="card-body p-4">
+            <form action="{{ url_for('evaluation.submit_evaluation') }}" method="POST">
+              <input type="hidden" name="application_id" value="{{ application.application_id }}" />
+
+              <div class="mb-3">
+                <label class="form-label fw-semibold d-flex justify-content-between">
+                  <span>1. Startup Eligibility (DPIIT & Maharashtra Policy)</span>
+                  <span class="text-primary fw-bold">Max 20</span>
+                </label>
+                <input type="number" name="eligibility_score" class="form-control score-input" min="0" max="20" value="{{ application.eligibility_score if application.eligibility_score is not none else 18 }}" required />
+              </div>
+
+              <div class="mb-3">
+                <label class="form-label fw-semibold d-flex justify-content-between">
+                  <span>2. Technology Readiness & TRL Level</span>
+                  <span class="text-primary fw-bold">Max 20</span>
+                </label>
+                <input type="number" name="technology_score" class="form-control score-input" min="0" max="20" value="{{ application.technology_score if application.technology_score is not none else 18 }}" required />
+              </div>
+
+              <div class="mb-3">
+                <label class="form-label fw-semibold d-flex justify-content-between">
+                  <span>3. Solution Feasibility & Cost Model</span>
+                  <span class="text-primary fw-bold">Max 20</span>
+                </label>
+                <input type="number" name="feasibility_score" class="form-control score-input" min="0" max="20" value="{{ application.feasibility_score if application.feasibility_score is not none else 17 }}" required />
+              </div>
+
+              <div class="mb-3">
+                <label class="form-label fw-semibold d-flex justify-content-between">
+                  <span>4. Deployment Timeline & Milestones</span>
+                  <span class="text-primary fw-bold">Max 20</span>
+                </label>
+                <input type="number" name="timeline_score" class="form-control score-input" min="0" max="20" value="{{ application.timeline_score if application.timeline_score is not none else 16 }}" required />
+              </div>
+
+              <div class="mb-3">
+                <label class="form-label fw-semibold d-flex justify-content-between">
+                  <span>5. Founder & Technical Team Experience</span>
+                  <span class="text-primary fw-bold">Max 20</span>
+                </label>
+                <input type="number" name="experience_score" class="form-control score-input" min="0" max="20" value="{{ application.experience_score if application.experience_score is not none else 18 }}" required />
+              </div>
+
+              <div class="mb-4">
+                <label class="form-label fw-semibold">Evaluator Comments & Recommendations</label>
+                <textarea name="comments" class="form-control" rows="3" placeholder="Provide qualitative feedback for government procurement committee..."></textarea>
+              </div>
+
+              <button type="submit" class="btn btn-primary w-100 py-2 fw-bold">
+                <i class="bi bi-check-circle-fill me-1"></i> Submit Official Readiness Score
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  {% else %}
+    <div class="alert alert-warning">Application not found.</div>
+  {% endif %}
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/evaluator.js') }}"></script>
+{% endblock %}

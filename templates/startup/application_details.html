@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% block title %}Application Details - Innovation Procurement Bridge{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+      <h2 class="fw-bold mb-1">Proposal & Evaluation Status</h2>
+      <p class="text-muted mb-0">Application ID: #APP-{{ application.application_id if application else '' }}</p>
+    </div>
+    <a href="{{ url_for('startup.applications') }}" class="btn btn-outline-secondary"><i class="bi bi-arrow-left me-1"></i> Back to Applications</a>
+  </div>
+
+  {% if application %}
+    <div class="row g-4">
+      <div class="col-lg-7">
+        <div class="card border-0 shadow-sm rounded-3 mb-4">
+          <div class="card-body p-4">
+            <h5 class="fw-bold mb-3">Submitted Proposal</h5>
+            <div class="mb-3">
+              <label class="text-muted small d-block">Challenge</label>
+              <span class="fw-bold">{{ application.challenge_title }}</span>
+            </div>
+            <div class="mb-3">
+              <label class="text-muted small d-block">Summary</label>
+              <p>{{ application.description }}</p>
+            </div>
+            <div>
+              <label class="text-muted small d-block">Full Proposal</label>
+              <div class="bg-light p-3 rounded-3">{{ application.proposal }}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-5">
+        <div class="card border-0 shadow-sm rounded-3">
+          <div class="card-body p-4">
+            <h5 class="fw-bold mb-3">Readiness Score Breakdown</h5>
+            {% if application.total_score is not none %}
+              <div class="text-center py-3 bg-primary text-white rounded-3 mb-4">
+                <div class="display-4 fw-bold">{{ application.total_score }}</div>
+                <small class="text-white-50 uppercase">Readiness Index (Out of 100)</small>
+              </div>
+              <ul class="list-group list-group-flush">
+                <li class="list-group-item d-flex justify-content-between"><span>Eligibility</span><strong>{{ application.eligibility_score }}/20</strong></li>
+                <li class="list-group-item d-flex justify-content-between"><span>Technology Readiness</span><strong>{{ application.technology_score }}/20</strong></li>
+                <li class="list-group-item d-flex justify-content-between"><span>Feasibility</span><strong>{{ application.feasibility_score }}/20</strong></li>
+                <li class="list-group-item d-flex justify-content-between"><span>Timeline & Milestones</span><strong>{{ application.timeline_score }}/20</strong></li>
+                <li class="list-group-item d-flex justify-content-between"><span>Team Experience</span><strong>{{ application.experience_score }}/20</strong></li>
+              </ul>
+            {% else %}
+              <div class="alert alert-info">Evaluation is currently underway by the Technical Committee.</div>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+  {% else %}
+    <div class="alert alert-warning">Application not found.</div>
+  {% endif %}
+</div>
+{% endblock %}

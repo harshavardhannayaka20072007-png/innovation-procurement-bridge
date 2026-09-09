@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block title %}Submit Proposal - Innovation Procurement Bridge{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+  <div class="mb-4">
+    <a href="{{ url_for('startup.challenge_details', challenge_id=challenge.challenge_id if challenge else 1) }}" class="btn btn-outline-secondary btn-sm mb-2">
+      <i class="bi bi-arrow-left me-1"></i> Back to Challenge
+    </a>
+    <h2 class="fw-bold">Submit Startup Proposal</h2>
+    <p class="text-muted">Applying for: <strong>{{ challenge.title if challenge else '' }}</strong></p>
+  </div>
+
+  <div class="card border-0 shadow-sm rounded-3">
+    <div class="card-body p-4">
+      <form action="{{ url_for('applications.submit_application') }}" method="POST">
+        <input type="hidden" name="challenge_id" value="{{ challenge.challenge_id if challenge else '' }}" />
+
+        <div class="mb-3">
+          <label class="form-label fw-semibold">Short Executive Summary</label>
+          <input type="text" class="form-control" name="description" placeholder="Briefly describe your solution approach in 1-2 sentences..." required />
+        </div>
+
+        <div class="mb-4">
+          <label class="form-label fw-semibold">Comprehensive Technical Proposal & Implementation Strategy</label>
+          <textarea class="form-control" name="proposal" rows="8" placeholder="Detail your architecture, hardware/software specs, deployment timeline, team experience, and compliance..." required></textarea>
+        </div>
+
+        <div class="alert alert-info small mb-4">
+          <i class="bi bi-shield-check me-1"></i> Submissions are automatically routed to the Technical Evaluation Board for Readiness Scoring across Eligibility, Technology, Feasibility, Timeline, and Experience.
+        </div>
+
+        <div class="d-flex justify-content-end gap-2">
+          <a href="{{ url_for('startup.challenges') }}" class="btn btn-light px-4">Cancel</a>
+          <button type="submit" class="btn btn-primary px-4 fw-bold">
+            <i class="bi bi-send-fill me-1"></i> Submit Official Proposal
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block title %}Startup Profile - Innovation Procurement Bridge{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <div class="card border-0 shadow-sm rounded-3">
+        <div class="card-header bg-white py-3">
+          <h4 class="fw-bold mb-0"><i class="bi bi-building text-primary me-2"></i>Startup Profile Details</h4>
+        </div>
+        <div class="card-body p-4">
+          <div class="row g-3">
+            <div class="col-md-6">
+              <label class="text-muted small">Company Name</label>
+              <div class="fw-bold fs-5">{{ user.company_name if user else session.get('company_name', 'TechSolve Labs') }}</div>
+            </div>
+            <div class="col-md-6">
+              <label class="text-muted small">Official Email</label>
+              <div class="fw-semibold">{{ user.email if user else session.get('email', 'techsolve@startup.in') }}</div>
+            </div>
+            <div class="col-md-6">
+              <label class="text-muted small">Username</label>
+              <div class="fw-semibold">{{ user.username if user else session.get('username', 'techsolve') }}</div>
+            </div>
+            <div class="col-md-6">
+              <label class="text-muted small">Platform Account Role</label>
+              <div><span class="badge bg-success fs-6">Registered Startup</span></div>
+            </div>
+            <div class="col-12">
+              <hr />
+              <div class="alert alert-light border small">
+                <i class="bi bi-patch-check-fill text-primary me-1"></i> Verified by Maharashtra State Innovation Cell for Direct Public Procurement Eligibility.
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

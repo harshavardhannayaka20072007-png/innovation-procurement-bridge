@@ -1,0 +1,104 @@
+{% extends "base.html" %}
+{% block title %}Sign In / Register - Innovation Procurement Bridge{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-md-8 col-lg-6">
+
+      <!-- Demo Quick Access Card -->
+      <div class="card bg-primary text-white shadow mb-4 rounded-3 border-0">
+        <div class="card-body p-4 text-center">
+          <h5 class="fw-bold mb-2"><i class="bi bi-lightning-charge-fill text-warning me-1"></i> Quick Demo Access</h5>
+          <p class="small text-white-50 mb-3">Click below to instantly log in as any role without typing passwords:</p>
+          <div class="d-flex flex-wrap justify-content-center gap-2">
+            <a href="{{ url_for('auth.demo_login', role='government') }}" class="btn btn-light btn-sm fw-semibold">
+              <i class="bi bi-building me-1 text-primary"></i> Government Portal
+            </a>
+            <a href="{{ url_for('auth.demo_login', role='startup') }}" class="btn btn-light btn-sm fw-semibold">
+              <i class="bi bi-rocket-takeoff me-1 text-success"></i> Startup Portal
+            </a>
+            <a href="{{ url_for('auth.demo_login', role='evaluator') }}" class="btn btn-light btn-sm fw-semibold">
+              <i class="bi bi-clipboard-check me-1 text-warning"></i> Evaluator Portal
+            </a>
+            <a href="{{ url_for('auth.demo_login', role='admin') }}" class="btn btn-light btn-sm fw-semibold">
+              <i class="bi bi-gear-fill me-1 text-dark"></i> Admin Portal
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Login / Register Card -->
+      <div class="card border-0 shadow-lg rounded-3">
+        <div class="card-body p-4">
+          <ul class="nav nav-pills nav-justified mb-4" id="pills-tab" role="tablist">
+            <li class="nav-item" role="presentation">
+              <button class="nav-link active fw-bold" id="pills-login-tab" data-bs-toggle="pill" data-bs-target="#pills-login" type="button" role="tab">
+                <i class="bi bi-box-arrow-in-right me-1"></i> Log In
+              </button>
+            </li>
+            <li class="nav-item" role="presentation">
+              <button class="nav-link fw-bold" id="pills-register-tab" data-bs-toggle="pill" data-bs-target="#pills-register" type="button" role="tab">
+                <i class="bi bi-person-plus me-1"></i> Register Account
+              </button>
+            </li>
+          </ul>
+
+          <div class="tab-content" id="pills-tabContent">
+            <!-- Login Form -->
+            <div class="tab-pane fade show active" id="pills-login" role="tabpanel">
+              <form action="{{ url_for('auth.login') }}" method="POST">
+                <div class="mb-3">
+                  <label for="loginEmail" class="form-label fw-semibold">Email Address</label>
+                  <input type="email" class="form-control" id="loginEmail" name="email" placeholder="e.g. gov@maharashtra.gov.in" required />
+                </div>
+                <div class="mb-4">
+                  <label for="loginPassword" class="form-label fw-semibold">Password</label>
+                  <input type="password" class="form-control" id="loginPassword" name="password" placeholder="Enter password" required />
+                </div>
+                <button type="submit" class="btn btn-primary w-100 py-2 fw-semibold">
+                  <i class="bi bi-box-arrow-in-right me-1"></i> Sign In to Portal
+                </button>
+              </form>
+            </div>
+
+            <!-- Register Form -->
+            <div class="tab-pane fade" id="pills-register" role="tabpanel">
+              <form action="{{ url_for('auth.register') }}" method="POST">
+                <div class="mb-3">
+                  <label for="regRole" class="form-label fw-semibold">Select Account Role</label>
+                  <select class="form-select" id="regRole" name="role" required>
+                    <option value="startup" selected>Startup Representative</option>
+                    <option value="government">Government Department Official</option>
+                    <option value="evaluator">Technical Committee Evaluator</option>
+                  </select>
+                </div>
+                <div class="mb-3">
+                  <label for="regUsername" class="form-label fw-semibold">Username / Full Name</label>
+                  <input type="text" class="form-control" id="regUsername" name="username" placeholder="e.g. techsolve_admin" required />
+                </div>
+                <div class="mb-3">
+                  <label for="regEmail" class="form-label fw-semibold">Email Address</label>
+                  <input type="email" class="form-control" id="regEmail" name="email" placeholder="name@domain.com" required />
+                </div>
+                <div class="mb-3">
+                  <label for="regEntity" class="form-label fw-semibold">Company / Department Name</label>
+                  <input type="text" class="form-control" id="regEntity" name="company_name" placeholder="e.g. TechSolve Labs or Urban Dev Dept" required />
+                </div>
+                <div class="mb-4">
+                  <label for="regPassword" class="form-label fw-semibold">Password</label>
+                  <input type="password" class="form-control" id="regPassword" name="password" placeholder="Create password" required />
+                </div>
+                <button type="submit" class="btn btn-success w-100 py-2 fw-semibold">
+                  <i class="bi bi-person-check me-1"></i> Create Account
+                </button>
+              </form>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

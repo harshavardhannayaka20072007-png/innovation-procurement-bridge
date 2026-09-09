@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block title %}KPI Performance Review - Innovation Procurement Bridge{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+      <h2 class="fw-bold mb-1">Pilot KPI Performance Records</h2>
+      <p class="text-muted mb-0">Evaluate pilot performance against benchmarks.</p>
+    </div>
+  </div>
+
+  <div class="card border-0 shadow-sm rounded-3">
+    <div class="card-body p-0">
+      <div class="table-responsive">
+        <table class="table align-middle mb-0">
+          <thead class="table-light">
+            <tr>
+              <th class="ps-4">Startup</th>
+              <th>Challenge</th>
+              <th>KPI Metric</th>
+              <th>Target</th>
+              <th>Actual</th>
+              <th>Unit</th>
+              <th>Remarks</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% if performance_records %}
+              {% for perf in performance_records %}
+                <tr>
+                  <td class="ps-4 fw-bold">{{ perf.startup_name }}</td>
+                  <td>{{ perf.challenge_title }}</td>
+                  <td class="fw-semibold text-primary">{{ perf.kpi_name }}</td>
+                  <td>{{ perf.target_value }}</td>
+                  <td><span class="badge bg-success fs-6">{{ perf.actual_value }}</span></td>
+                  <td>{{ perf.unit }}</td>
+                  <td class="small text-muted">{{ perf.remarks }}</td>
+                </tr>
+              {% endfor %}
+            {% else %}
+              <tr>
+                <td colspan="7" class="text-center py-5 text-muted">No performance records logged yet.</td>
+              </tr>
+            {% endif %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

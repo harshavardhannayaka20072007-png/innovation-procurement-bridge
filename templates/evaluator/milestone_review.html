@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+{% block title %}Milestone Verification - Innovation Procurement Bridge{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+      <h2 class="fw-bold mb-1">Pilot Milestone Verification</h2>
+      <p class="text-muted mb-0">Verify evidence submitted by startups for field pilot progression.</p>
+    </div>
+  </div>
+
+  <div class="card border-0 shadow-sm rounded-3">
+    <div class="card-body p-0">
+      <div class="table-responsive">
+        <table class="table align-middle mb-0">
+          <thead class="table-light">
+            <tr>
+              <th class="ps-4">Startup</th>
+              <th>Milestone Title</th>
+              <th>Due Date</th>
+              <th>Evidence Document</th>
+              <th>Status</th>
+              <th class="text-end pe-4">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% if milestones %}
+              {% for ms in milestones %}
+                <tr>
+                  <td class="ps-4 fw-bold">{{ ms.startup_name }}</td>
+                  <td>{{ ms.title }}</td>
+                  <td>{{ ms.due_date }}</td>
+                  <td>
+                    {% if ms.evidence_file %}
+                      <span class="badge bg-light text-dark border"><i class="bi bi-file-earmark-pdf text-danger me-1"></i>{{ ms.evidence_file }}</span>
+                    {% else %}
+                      <span class="text-muted">Not submitted</span>
+                    {% endif %}
+                  </td>
+                  <td>
+                    {% if ms.status == 'Approved' %}
+                      <span class="badge bg-success">Approved</span>
+                    {% elif ms.status == 'Submitted' %}
+                      <span class="badge bg-warning text-dark">Pending Review</span>
+                    {% else %}
+                      <span class="badge bg-secondary">Pending</span>
+                    {% endif %}
+                  </td>
+                  <td class="text-end pe-4">
+                    {% if ms.status == 'Submitted' %}
+                      <form action="{{ url_for('milestones.review_milestone', milestone_id=ms.milestone_id) }}" method="POST" class="d-inline">
+                        <input type="hidden" name="status" value="Approved" />
+                        <button type="submit" class="btn btn-sm btn-success fw-bold"><i class="bi bi-check-lg me-1"></i> Approve</button>
+                      </form>
+                      <form action="{{ url_for('milestones.review_milestone', milestone_id=ms.milestone_id) }}" method="POST" class="d-inline">
+                        <input type="hidden" name="status" value="Rejected" />
+                        <button type="submit" class="btn btn-sm btn-outline-danger"><i class="bi bi-x-lg me-1"></i> Reject</button>
+                      </form>
+                    {% else %}
+                      <span class="text-muted small">Completed</span>
+                    {% endif %}
+                  </td>
+                </tr>
+              {% endfor %}
+            {% else %}
+              <tr>
+                <td colspan="6" class="text-center py-5 text-muted">No milestone submissions pending verification.</td>
+              </tr>
+            {% endif %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
