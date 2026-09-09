@@ -15,8 +15,9 @@ def register():
     if not name or not email or not password or not role:
         return jsonify({"detail": "Missing required fields"}), 400
 
-    if role not in ['Government', 'Startup', 'Evaluator', 'Admin']:
-        return jsonify({"detail": "Invalid user role"}), 400
+    # Prevent public Admin registration
+    if role not in ['Government', 'Startup', 'Evaluator']:
+        return jsonify({"detail": "Invalid user role or public registration not allowed"}), 400
 
     conn = get_db_connection()
     cursor = conn.cursor(dictionary=True)
@@ -72,7 +73,15 @@ def login():
                 "user_id": user['id']
             }), 200
 
-        return redirect(url_for('auth.dashboard'))
+        # Redirect according to role
+        role_dashboards = {
+            'Government': 'government.dashboard',
+            'Startup': 'startup.dashboard',
+            'Evaluator': 'evaluator.dashboard',
+            'Admin': 'admin.dashboard'
+        }
+        target_route = role_dashboards.get(user['role'], 'auth.login')
+        return redirect(url_for(target_route))
     finally:
         cursor.close()
         conn.close()
