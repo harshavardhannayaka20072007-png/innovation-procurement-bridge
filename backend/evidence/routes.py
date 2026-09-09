@@ -1,12 +1,26 @@
 from flask import Blueprint, request, jsonify
-from database.connection import get_db_connection
 
-evidence_bp = Blueprint("evidence", __name__, url_prefix="/evidence")
+from database.connection import get_db_connection
+from backend.auth.dependencies import require_role
+
+
+evidence_bp = Blueprint(
+    "evidence",
+    __name__,
+    url_prefix="/evidence"
+)
 
 
 @evidence_bp.route("/", methods=["POST"])
+@require_role(["Startup"])
 def submit_evidence():
+
     data = request.get_json()
+
+    if not data:
+        return jsonify({
+            "detail": "JSON data required"
+        }), 400
 
     milestone_id = data.get("milestone_id")
     file_name = data.get("file_name")
@@ -15,49 +29,88 @@ def submit_evidence():
 
     if not milestone_id:
         return jsonify({
-            "error": "milestone_id is required"
+            "detail": "milestone_id is required"
         }), 400
 
     conn = get_db_connection()
-    cursor = conn.cursor()
+    cursor = conn.cursor(dictionary=True)
 
-    query = """
-        INSERT INTO evidence
-        (milestone_id, file_name, file_path, description)
-        VALUES (%s, %s, %s, %s)
-    """
+    try:
+        # Check that the milestone exists
+        cursor.execute(
+            """
+            SELECT milestone_id
+            FROM milestones
+            WHERE milestone_id = %s
+            """,
+            (milestone_id,)
+        )
 
-    cursor.execute(
-        query,
-        (milestone_id, file_name, file_path, description)
-    )
+        milestone = cursor.fetchone()
 
-    conn.commit()
+        if not milestone:
+            return jsonify({
+                "detail": "Milestone not found"
+            }), 404
 
-    evidence_id = cursor.lastrowid
+        cursor.execute(
+            """
+            INSERT INTO evidence
+            (
+                milestone_id,
+                file_name,
+                file_path,
+                description
+            )
+            VALUES (%s, %s, %s, %s)
+            """,
+            (
+                milestone_id,
+                file_name,
+                file_path,
+                description
+            )
+        )
 
-    cursor.close()
-    conn.close()
+        conn.commit()
 
-    return jsonify({
-        "message": "Evidence submitted successfully",
-        "evidence_id": evidence_id
-    }), 201
+        return jsonify({
+            "message": "Evidence submitted successfully",
+            "evidence_id": cursor.lastrowid
+        }), 201
+
+    finally:
+        cursor.close()
+        conn.close()
+
+
 @evidence_bp.route("/milestone/<int:milestone_id>", methods=["GET"])
+@require_role(["Government", "Startup", "Evaluator"])
 def get_evidence(milestone_id):
+
     conn = get_db_connection()
     cursor = conn.cursor(dictionary=True)
 
-    cursor.execute("""
-        SELECT *
-        FROM evidence
-        WHERE milestone_id = %s
-        ORDER BY evidence_id DESC
-    """, (milestone_id,))
+    try:
+        cursor.execute(
+            """
+            SELECT
+                evidence_id,
+                milestone_id,
+                file_name,
+                file_path,
+                description
+            FROM evidence
+            WHERE milestone_id = %s
+            ORDER BY evidence_id DESC
+            """,
+            (milestone_id,)
+        )
 
-    evidence = cursor.fetchall()
+        evidence = cursor.fetchall()
 
-    cursor.close()
-    conn.close()
+        return jsonify(evidence), 200
 
-    return jsonify(evidence), 200
+    finally:
+        cursor.close()
+        conn.close()

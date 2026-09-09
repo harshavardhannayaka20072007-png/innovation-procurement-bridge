@@ -1,3 +1,11 @@
+CREATE TABLE users (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    email VARCHAR(255) NOT NULL UNIQUE,
+    password_hash VARCHAR(255) NOT NULL,
+    role VARCHAR(50) NOT NULL
+);
+
 CREATE TABLE challenges (
     challenge_id INT AUTO_INCREMENT PRIMARY KEY,
     title VARCHAR(255) NOT NULL,
@@ -7,6 +15,7 @@ CREATE TABLE challenges (
     deadline DATE,
     status VARCHAR(50) DEFAULT 'Draft'
 );
+
 CREATE TABLE applications (
     application_id INT AUTO_INCREMENT PRIMARY KEY,
     challenge_id INT NOT NULL,
@@ -17,6 +26,7 @@ CREATE TABLE applications (
     status VARCHAR(50) DEFAULT 'Submitted',
     FOREIGN KEY (challenge_id) REFERENCES challenges(challenge_id)
 );
+
 CREATE TABLE scores (
     score_id INT AUTO_INCREMENT PRIMARY KEY,
     application_id INT NOT NULL,
@@ -28,6 +38,7 @@ CREATE TABLE scores (
     total_score INT DEFAULT 0,
     FOREIGN KEY (application_id) REFERENCES applications(application_id)
 );
+
 CREATE TABLE pilots (
     pilot_id INT AUTO_INCREMENT PRIMARY KEY,
     application_id INT NOT NULL,
@@ -37,6 +48,7 @@ CREATE TABLE pilots (
     status VARCHAR(50) DEFAULT 'Planned',
     FOREIGN KEY (application_id) REFERENCES applications(application_id)
 );
+
 CREATE TABLE milestones (
     milestone_id INT AUTO_INCREMENT PRIMARY KEY,
     pilot_id INT NOT NULL,
@@ -46,6 +58,7 @@ CREATE TABLE milestones (
     status VARCHAR(50) DEFAULT 'Pending',
     FOREIGN KEY (pilot_id) REFERENCES pilots(pilot_id)
 );
+
 CREATE TABLE evidence (
     evidence_id INT AUTO_INCREMENT PRIMARY KEY,
     milestone_id INT NOT NULL,
@@ -56,6 +69,7 @@ CREATE TABLE evidence (
     status VARCHAR(50) DEFAULT 'Submitted',
     FOREIGN KEY (milestone_id) REFERENCES milestones(milestone_id)
 );
+
 CREATE TABLE performance (
     performance_id INT AUTO_INCREMENT PRIMARY KEY,
     pilot_id INT NOT NULL,
@@ -66,6 +80,7 @@ CREATE TABLE performance (
     remarks TEXT,
     FOREIGN KEY (pilot_id) REFERENCES pilots(pilot_id)
 );
+
 CREATE TABLE decisions (
     decision_id INT AUTO_INCREMENT PRIMARY KEY,
     pilot_id INT NOT NULL,
