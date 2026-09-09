@@ -6,7 +6,7 @@
 
 <div class="eval-container">
     <h2>Application Evaluation</h2>
-    <p class="subtitle">Review proposal details, verify system screening score, and submit qualitative scores.</p>
+    <p class="subtitle">Review proposal details and submit qualitative evaluation scores.</p>
 
     <div class="details-card">
         <h3>Application #APP-{{ application.application_id }}: {{ startup.name }}</h3>
@@ -16,46 +16,40 @@
         <p><strong>Implementation Timeline:</strong> {{ application.timeline }}</p>
     </div>
 
-    <form id="evaluationForm" class="eval-form">
+    <form method="POST" action="/scores/" class="eval-form">
         <input type="hidden" name="application_id" value="{{ application.application_id }}">
 
         <h3>Scoring Criteria (Max 20 Points Each)</h3>
         
         <div class="form-group">
-            <label for="eligibility">Eligibility (Max 20):</label>
-            <input type="number" id="eligibility" name="eligibility" max="20" min="0" placeholder="0 - 20" required>
+            <label for="eligibility_score">Eligibility Score (Max 20):</label>
+            <input type="number" id="eligibility_score" name="eligibility_score" max="20" min="0" placeholder="0 - 20" required>
         </div>
 
         <div class="form-group">
-            <label for="technology">Technology & Innovation (Max 20):</label>
-            <input type="number" id="technology" name="technology" max="20" min="0" placeholder="0 - 20" required>
+            <label for="technology_score">Technology & Innovation Score (Max 20):</label>
+            <input type="number" id="technology_score" name="technology_score" max="20" min="0" placeholder="0 - 20" required>
         </div>
 
         <div class="form-group">
-            <label for="feasibility">Technical Feasibility (Max 20):</label>
-            <input type="number" id="feasibility" name="feasibility" max="20" min="0" placeholder="0 - 20" required>
+            <label for="feasibility_score">Technical Feasibility Score (Max 20):</label>
+            <input type="number" id="feasibility_score" name="feasibility_score" max="20" min="0" placeholder="0 - 20" required>
         </div>
 
         <div class="form-group">
-            <label for="timeline">Timeline & Realism (Max 20):</label>
-            <input type="number" id="timeline" name="timeline" max="20" min="0" placeholder="0 - 20" required>
+            <label for="timeline_score">Timeline & Realism Score (Max 20):</label>
+            <input type="number" id="timeline_score" name="timeline_score" max="20" min="0" placeholder="0 - 20" required>
         </div>
 
         <div class="form-group">
-            <label for="experience">Team Experience & Capability (Max 20):</label>
-            <input type="number" id="experience" name="experience" max="20" min="0" placeholder="0 - 20" required>
-        </div>
-
-        <div class="form-group">
-            <label for="comments">Evaluator Comments:</label>
-            <textarea id="comments" name="comments" rows="4" placeholder="Enter detailed technical feedback..." required></textarea>
+            <label for="experience_score">Team Experience & Capability Score (Max 20):</label>
+            <input type="number" id="experience_score" name="experience_score" max="20" min="0" placeholder="0 - 20" required>
         </div>
 
         <div class="btn-group">
             <button type="submit" class="btn-action">Submit Evaluation Score</button>
-            <a href="{{ url_for('evaluator_dashboard') }}" class="btn-action secondary">Cancel</a>
+            <a href="/evaluator/dashboard" class="btn-action secondary">Cancel</a>
         </div>
     </form>
 </div>
-<script src="{{ url_for('static', filename='js/evaluator.js') }}"></script>
 {% endblock %}

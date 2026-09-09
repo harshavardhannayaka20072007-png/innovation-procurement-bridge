@@ -25,7 +25,7 @@
     </div>
 
     <!-- Real Database Applications -->
-    <h3>Assigned Applications for Evaluation</h3>
+    <h3>Applications for Evaluation</h3>
     <table class="eval-table">
         <thead>
             <tr>
@@ -42,8 +42,14 @@
                 <td>APP-{{ app.application_id }}</td>
                 <td>{{ app.challenge_title }}</td>
                 <td>{{ app.startup_name }}</td>
-                <td><span class="score-badge {% if app.total_score >= 80 %}high{% else %}medium{% endif %}">{{ app.total_score }}/100</span></td>
-                <td><a href="{{ url_for('evaluator_application_review', application_id=app.application_id) }}" class="btn-action">Evaluate</a></td>
+                <td>
+                    {% if app.total_score %}
+                        <span class="score-badge {% if app.total_score >= 80 %}high{% else %}medium{% endif %}">{{ app.total_score }}/100</span>
+                    {% else %}
+                        <span class="score-badge medium">Not evaluated</span>
+                    {% endif %}
+                </td>
+                <td><a href="/evaluator/application_review?application_id={{ app.application_id }}" class="btn-action">Evaluate</a></td>
             </tr>
             {% else %}
             <tr>
@@ -60,7 +66,7 @@
             <tr>
                 <th>Pilot ID</th>
                 <th>Startup</th>
-                <th>Progress</th>
+                <th>Status</th>
                 <th>Actions</th>
             </tr>
         </thead>
@@ -69,11 +75,11 @@
             <tr>
                 <td>PLT-{{ pilot.pilot_id }}</td>
                 <td>{{ pilot.startup_name }}</td>
-                <td>{{ pilot.progress_percentage }}% Completed</td>
+                <td>{{ pilot.status }}</td>
                 <td>
-                    <a href="{{ url_for('evaluator_milestone_review', pilot_id=pilot.pilot_id) }}" class="btn-action">Review Milestones</a>
-                    <a href="{{ url_for('evaluator_performance_review', pilot_id=pilot.pilot_id) }}" class="btn-action secondary">KPIs</a>
-                    <a href="{{ url_for('evaluator_recommendation', pilot_id=pilot.pilot_id) }}" class="btn-action warning">Final Decision</a>
+                    <a href="/evaluator/milestone_review?pilot_id={{ pilot.pilot_id }}" class="btn-action">Review Milestones</a>
+                    <a href="/evaluator/performance_review?pilot_id={{ pilot.pilot_id }}" class="btn-action secondary">KPIs</a>
+                    <a href="/evaluator/recommendation?pilot_id={{ pilot.pilot_id }}" class="btn-action warning">Final Decision</a>
                 </td>
             </tr>
             {% else %}

@@ -10,7 +10,7 @@
 
     <div class="details-card">
         <h3>Pilot: PLT-{{ pilot.pilot_id }} ({{ startup.name }})</h3>
-        <p><strong>Milestone Name:</strong> {{ milestone.name }}</p>
+        <p><strong>Milestone Title:</strong> {{ milestone.title }}</p>
         <p><strong>Due Date:</strong> {{ milestone.due_date }} | <strong>Status:</strong> {{ milestone.status }}</p>
     </div>
 
@@ -25,25 +25,23 @@
         </ul>
     </div>
 
-    <form id="milestoneForm" class="eval-form">
+    <!-- Note: Updating milestone status requires a BACKEND INTEGRATION REQUIREMENT endpoint -->
+    <form class="eval-form">
         <input type="hidden" name="milestone_id" value="{{ milestone.milestone_id }}">
         
         <div class="form-group">
             <label for="status">Verification Decision:</label>
             <select id="status" name="status">
-                <option value="Approved">Approve Milestone for Payment Processing</option>
+                <option value="Approved">Approve Milestone</option>
                 <option value="Rejected">Reject Evidence</option>
                 <option value="Rework Required">Request Further Evidence</option>
             </select>
         </div>
 
-        <div class="form-group">
-            <label for="review_notes">Verification Notes:</label>
-            <textarea id="review_notes" name="review_notes" rows="3" placeholder="Enter verification notes..." required></textarea>
+        <div class="btn-group">
+            <button type="submit" class="btn-action">Submit Verification</button>
+            <a href="/evaluator/dashboard" class="btn-action secondary">Cancel</a>
         </div>
-
-        <button type="submit" class="btn-action">Submit Verification Decision</button>
     </form>
 </div>
-<script src="{{ url_for('static', filename='js/evaluator.js') }}"></script>
 {% endblock %}

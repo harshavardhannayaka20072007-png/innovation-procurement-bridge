@@ -44,8 +44,9 @@
         </tbody>
     </table>
 
-    <div style="margin-top: 1.5rem;">
-        <a href="{{ url_for('evaluator_recommendation', pilot_id=pilot.pilot_id) }}" class="btn-action">Proceed to Final Decision</a>
+    <div class="btn-group" style="margin-top: 1.5rem;">
+        <a href="/evaluator/recommendation?pilot_id={{ pilot.pilot_id }}" class="btn-action">Proceed to Final Decision</a>
+        <a href="/evaluator/dashboard" class="btn-action secondary">Back to Dashboard</a>
     </div>
 </div>
 {% endblock %}
