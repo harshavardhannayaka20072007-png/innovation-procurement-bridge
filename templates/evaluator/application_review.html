@@ -9,45 +9,51 @@
     <p class="subtitle">Review proposal details, verify system screening score, and submit qualitative scores.</p>
 
     <div class="details-card">
-        <h3>Application #APP-101: EcoTech Solutions</h3>
-        <p><strong>Challenge:</strong> Smart Garbage Collection (Urban Development Dept)</p>
-        <p><strong>Proposed Solution:</strong> IoT-based route optimization algorithm for municipal garbage collection.</p>
-        <p><strong>Implementation Timeline:</strong> 3 Months Pilot</p>
+        <h3>Application #APP-{{ application.application_id }}: {{ startup.name }}</h3>
+        <p><strong>Challenge:</strong> {{ challenge.title }}</p>
+        <p><strong>Proposed Solution:</strong> {{ application.solution }}</p>
+        <p><strong>Technology Stack:</strong> {{ application.technology }}</p>
+        <p><strong>Implementation Timeline:</strong> {{ application.timeline }}</p>
     </div>
 
     <form id="evaluationForm" class="eval-form">
-        <input type="hidden" name="application_id" value="101">
+        <input type="hidden" name="application_id" value="{{ application.application_id }}">
 
-        <h3>Scoring Criteria</h3>
+        <h3>Scoring Criteria (Max 20 Points Each)</h3>
         
         <div class="form-group">
-            <label for="tech_fit">Technology Fit & Innovation (Max 25):</label>
-            <input type="number" id="tech_fit" name="tech_fit" max="25" min="0" value="23" required>
+            <label for="eligibility">Eligibility (Max 20):</label>
+            <input type="number" id="eligibility" name="eligibility" max="20" min="0" placeholder="0 - 20" required>
         </div>
 
         <div class="form-group">
-            <label for="feasibility">Technical Feasibility (Max 25):</label>
-            <input type="number" id="feasibility" name="feasibility" max="25" min="0" value="22" required>
+            <label for="technology">Technology & Innovation (Max 20):</label>
+            <input type="number" id="technology" name="technology" max="20" min="0" placeholder="0 - 20" required>
         </div>
 
         <div class="form-group">
-            <label for="timeline">Timeline & Cost Realism (Max 25):</label>
-            <input type="number" id="timeline" name="timeline" max="25" min="0" value="20" required>
+            <label for="feasibility">Technical Feasibility (Max 20):</label>
+            <input type="number" id="feasibility" name="feasibility" max="20" min="0" placeholder="0 - 20" required>
         </div>
 
         <div class="form-group">
-            <label for="capability">Team Capability & Experience (Max 25):</label>
-            <input type="number" id="capability" name="capability" max="25" min="0" value="24" required>
+            <label for="timeline">Timeline & Realism (Max 20):</label>
+            <input type="number" id="timeline" name="timeline" max="20" min="0" placeholder="0 - 20" required>
         </div>
 
         <div class="form-group">
-            <label for="comments">Evaluator Comments & Recommendations:</label>
-            <textarea id="comments" name="comments" rows="4" placeholder="Enter detailed technical feedback..." required>Strong proposal with proven prototype. Recommended for a 3-month pilot in Pune.</textarea>
+            <label for="experience">Team Experience & Capability (Max 20):</label>
+            <input type="number" id="experience" name="experience" max="20" min="0" placeholder="0 - 20" required>
+        </div>
+
+        <div class="form-group">
+            <label for="comments">Evaluator Comments:</label>
+            <textarea id="comments" name="comments" rows="4" placeholder="Enter detailed technical feedback..." required></textarea>
         </div>
 
         <div class="btn-group">
-            <button type="submit" class="btn-action">Submit Evaluation & Recommend Pilot</button>
-            <a href="/evaluator/dashboard" class="btn-action secondary">Cancel</a>
+            <button type="submit" class="btn-action">Submit Evaluation Score</button>
+            <a href="{{ url_for('evaluator_dashboard') }}" class="btn-action secondary">Cancel</a>
         </div>
     </form>
 </div>

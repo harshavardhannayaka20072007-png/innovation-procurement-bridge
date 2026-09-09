@@ -9,26 +9,26 @@
     <p class="subtitle">Recommend the strategic next step based on pilot performance data.</p>
 
     <div class="details-card">
-        <h3>Pilot Summary: PLT-501 (EcoTech Solutions)</h3>
-        <p><strong>Overall Score:</strong> 91%</p>
-        <p><strong>KPIs Met:</strong> 3/3 Passed</p>
+        <h3>Pilot Summary: PLT-{{ pilot.pilot_id }} ({{ startup.name }})</h3>
+        <p><strong>Overall Evaluation Score:</strong> {{ pilot.overall_score }}/100</p>
+        <p><strong>KPI Target Result:</strong> {{ pilot.kpis_passed }}/{{ pilot.total_kpis }} Passed</p>
     </div>
 
     <form id="decisionForm" class="eval-form">
-        <input type="hidden" name="pilot_id" value="501">
+        <input type="hidden" name="pilot_id" value="{{ pilot.pilot_id }}">
 
         <div class="form-group">
             <label for="decision">Strategic Recommendation:</label>
             <select id="decision" name="decision" class="decision-select">
-                <option value="SCALE" style="color: green; font-weight: bold;">SCALE (Expand procurement state-wide)</option>
+                <option value="SCALE" style="color: green; font-weight: bold;">SCALE (Expand procurement)</option>
                 <option value="IMPROVE" style="color: orange; font-weight: bold;">IMPROVE (Extend pilot for refinements)</option>
                 <option value="STOP" style="color: red; font-weight: bold;">STOP (Terminate pilot)</option>
             </select>
         </div>
 
         <div class="form-group">
-            <label for="justification">Detailed Justification:</label>
-            <textarea id="justification" name="justification" rows="4" required>The startup exceeded all primary efficiency targets during the 3-month pilot. Highly recommended for state-wide deployment across other municipal corporations.</textarea>
+            <label for="remarks">Detailed Justification & Remarks:</label>
+            <textarea id="remarks" name="remarks" rows="4" placeholder="Enter evaluator justification and decision remarks..." required></textarea>
         </div>
 
         <button type="submit" class="btn-action warning">Submit Final Recommendation</button>

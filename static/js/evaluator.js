@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // Evaluation Form Submit Handler
+    // 1. Application Evaluation Form Handler
     const evalForm = document.getElementById('evaluationForm');
     if (evalForm) {
         evalForm.addEventListener('submit', async (e) => {
@@ -8,7 +8,8 @@ document.addEventListener('DOMContentLoaded', () => {
             const data = Object.fromEntries(formData.entries());
 
             try {
-                const res = await fetch('/api/evaluation/submit', {
+                // Connects to actual scores backend endpoint
+                const res = await fetch('/scores/submit', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(data)
@@ -17,33 +18,68 @@ document.addEventListener('DOMContentLoaded', () => {
                     alert('Evaluation submitted successfully!');
                     window.location.href = '/evaluator/dashboard';
                 } else {
-                    alert('Submitted locally for demo presentation.');
-                    window.location.href = '/evaluator/dashboard';
+                    const error = await res.json();
+                    alert('Error submitting evaluation: ' + (error.message || 'Server error'));
                 }
             } catch (err) {
-                alert('Saved locally for presentation!');
-                window.location.href = '/evaluator/dashboard';
+                alert('Network error. Unable to connect to the server.');
             }
         });
     }
 
-    // Milestone Form Submit Handler
+    // 2. Milestone Verification Form Handler
     const milestoneForm = document.getElementById('milestoneForm');
     if (milestoneForm) {
-        milestoneForm.addEventListener('submit', (e) => {
+        milestoneForm.addEventListener('submit', async (e) => {
             e.preventDefault();
-            alert('Milestone verification recorded successfully!');
-            window.location.href = '/evaluator/dashboard';
+            const formData = new FormData(milestoneForm);
+            const data = Object.fromEntries(formData.entries());
+
+            try {
+                // Connects to actual milestones verification backend endpoint
+                const res = await fetch('/milestones/verify', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+                if (res.ok) {
+                    alert('Milestone verification recorded successfully!');
+                    window.location.href = '/evaluator/dashboard';
+                } else {
+                    const error = await res.json();
+                    alert('Error updating milestone: ' + (error.message || 'Server error'));
+                }
+            } catch (err) {
+                alert('Network error. Unable to connect to the server.');
+            }
         });
     }
 
-    // Decision Form Submit Handler
+    // 3. Final Strategic Decision Form Handler
     const decisionForm = document.getElementById('decisionForm');
     if (decisionForm) {
-        decisionForm.addEventListener('submit', (e) => {
+        decisionForm.addEventListener('submit', async (e) => {
             e.preventDefault();
-            alert('Final strategic recommendation recorded!');
-            window.location.href = '/evaluator/dashboard';
+            const formData = new FormData(decisionForm);
+            const data = Object.fromEntries(formData.entries());
+
+            try {
+                // Connects to actual POST /decisions/ backend endpoint
+                const res = await fetch('/decisions/', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+                if (res.ok) {
+                    alert('Final strategic recommendation recorded!');
+                    window.location.href = '/evaluator/dashboard';
+                } else {
+                    const error = await res.json();
+                    alert('Error submitting decision: ' + (error.message || 'Server error'));
+                }
+            } catch (err) {
+                alert('Network error. Unable to connect to the server.');
+            }
         });
     }
 });

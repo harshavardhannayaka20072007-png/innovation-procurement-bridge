@@ -6,38 +6,40 @@
 
 <div class="eval-container">
     <h2>Milestone & Evidence Verification</h2>
-    <p class="subtitle">Verify evidence submitted by startups before milestone payment release.</p>
+    <p class="subtitle">Verify evidence submitted by startups for milestone verification.</p>
 
     <div class="details-card">
-        <h3>Pilot: PLT-501 (EcoTech Solutions)</h3>
-        <p><strong>Milestone 2:</strong> System operating with 20 vehicles in Pune.</p>
-        <p><strong>Due Date:</strong> Month 2 | <strong>Status:</strong> Under Review</p>
+        <h3>Pilot: PLT-{{ pilot.pilot_id }} ({{ startup.name }})</h3>
+        <p><strong>Milestone Name:</strong> {{ milestone.name }}</p>
+        <p><strong>Due Date:</strong> {{ milestone.due_date }} | <strong>Status:</strong> {{ milestone.status }}</p>
     </div>
 
     <div class="evidence-box">
-        <h3>Submitted Evidence</h3>
+        <h3>Submitted Evidence Files</h3>
         <ul>
-            <li>📄 <a href="#">GPS Tracking Logs (PDF)</a></li>
-            <li>📊 <a href="#">Route Efficiency Metrics (CSV)</a></li>
-            <li>📷 <a href="#">On-Site Deployment Proof (JPG)</a></li>
+            {% for item in evidence_list %}
+            <li>📄 <a href="{{ item.file_path }}" target="_blank">{{ item.file_name }}</a> - <em>{{ item.description }}</em></li>
+            {% else %}
+            <li>No evidence files uploaded for this milestone yet.</li>
+            {% endfor %}
         </ul>
     </div>
 
     <form id="milestoneForm" class="eval-form">
-        <input type="hidden" name="milestone_id" value="2">
+        <input type="hidden" name="milestone_id" value="{{ milestone.milestone_id }}">
         
         <div class="form-group">
             <label for="status">Verification Decision:</label>
             <select id="status" name="status">
-                <option value="APPROVED">Approve Milestone & Release Payment</option>
-                <option value="REJECTED">Reject Evidence</option>
-                <option value="REWORK">Request Further Evidence</option>
+                <option value="Approved">Approve Milestone for Payment Processing</option>
+                <option value="Rejected">Reject Evidence</option>
+                <option value="Rework Required">Request Further Evidence</option>
             </select>
         </div>
 
         <div class="form-group">
             <label for="review_notes">Verification Notes:</label>
-            <textarea id="review_notes" name="review_notes" rows="3" placeholder="Notes on verified evidence..." required>Verified GPS logs and field deployment. Criteria satisfied.</textarea>
+            <textarea id="review_notes" name="review_notes" rows="3" placeholder="Enter verification notes..." required></textarea>
         </div>
 
         <button type="submit" class="btn-action">Submit Verification Decision</button>

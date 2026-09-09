@@ -8,21 +8,23 @@
     <h2>Evaluator & Pilot Oversight Dashboard</h2>
     <p class="subtitle">Review applications, validate pilot milestones, and submit final procurement recommendations.</p>
 
+    <!-- Real Dynamic Statistics -->
     <div class="stats-grid">
         <div class="stat-card">
             <h3>Pending Reviews</h3>
-            <p class="stat-number">4</p>
+            <p class="stat-number">{{ stats.pending_reviews }}</p>
         </div>
         <div class="stat-card">
             <h3>Active Pilots</h3>
-            <p class="stat-number">2</p>
+            <p class="stat-number">{{ stats.active_pilots }}</p>
         </div>
         <div class="stat-card">
             <h3>Milestones Pending</h3>
-            <p class="stat-number">3</p>
+            <p class="stat-number">{{ stats.pending_milestones }}</p>
         </div>
     </div>
 
+    <!-- Real Database Applications -->
     <h3>Assigned Applications for Evaluation</h3>
     <table class="eval-table">
         <thead>
@@ -35,46 +37,50 @@
             </tr>
         </thead>
         <tbody>
+            {% for app in applications %}
             <tr>
-                <td>APP-101</td>
-                <td>Smart Garbage Collection</td>
-                <td>EcoTech Solutions</td>
-                <td><span class="score-badge high">91/100</span></td>
-                <td><a href="/evaluator/application_review?id=101" class="btn-action">Evaluate</a></td>
+                <td>APP-{{ app.application_id }}</td>
+                <td>{{ app.challenge_title }}</td>
+                <td>{{ app.startup_name }}</td>
+                <td><span class="score-badge {% if app.total_score >= 80 %}high{% else %}medium{% endif %}">{{ app.total_score }}/100</span></td>
+                <td><a href="{{ url_for('evaluator_application_review', application_id=app.application_id) }}" class="btn-action">Evaluate</a></td>
             </tr>
+            {% else %}
             <tr>
-                <td>APP-104</td>
-                <td>Hospital Queue Optimization</td>
-                <td>HealthPulse AI</td>
-                <td><span class="score-badge medium">84/100</span></td>
-                <td><a href="/evaluator/application_review?id=104" class="btn-action">Evaluate</a></td>
+                <td colspan="5">No pending applications for evaluation.</td>
             </tr>
+            {% endfor %}
         </tbody>
     </table>
 
+    <!-- Real Database Pilots -->
     <h3 style="margin-top: 2rem;">Active Pilots & Monitoring</h3>
     <table class="eval-table">
         <thead>
             <tr>
                 <th>Pilot ID</th>
                 <th>Startup</th>
-                <th>Location</th>
                 <th>Progress</th>
                 <th>Actions</th>
             </tr>
         </thead>
         <tbody>
+            {% for pilot in pilots %}
             <tr>
-                <td>PLT-501</td>
-                <td>EcoTech Solutions</td>
-                <td>Pune (20 Vehicles)</td>
-                <td>66% Completed</td>
+                <td>PLT-{{ pilot.pilot_id }}</td>
+                <td>{{ pilot.startup_name }}</td>
+                <td>{{ pilot.progress_percentage }}% Completed</td>
                 <td>
-                    <a href="/evaluator/milestone_review?pilot_id=501" class="btn-action">Review Milestones</a>
-                    <a href="/evaluator/performance_review?pilot_id=501" class="btn-action secondary">KPIs</a>
-                    <a href="/evaluator/recommendation?pilot_id=501" class="btn-action warning">Final Decision</a>
+                    <a href="{{ url_for('evaluator_milestone_review', pilot_id=pilot.pilot_id) }}" class="btn-action">Review Milestones</a>
+                    <a href="{{ url_for('evaluator_performance_review', pilot_id=pilot.pilot_id) }}" class="btn-action secondary">KPIs</a>
+                    <a href="{{ url_for('evaluator_recommendation', pilot_id=pilot.pilot_id) }}" class="btn-action warning">Final Decision</a>
                 </td>
             </tr>
+            {% else %}
+            <tr>
+                <td colspan="4">No active pilots under monitoring.</td>
+            </tr>
+            {% endfor %}
         </tbody>
     </table>
 </div>

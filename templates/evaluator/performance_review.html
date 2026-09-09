@@ -9,8 +9,8 @@
     <p class="subtitle">Comparing target metrics against actual pilot outcomes.</p>
 
     <div class="details-card">
-        <h3>Pilot PLT-501 Metrics</h3>
-        <p><strong>Startup:</strong> EcoTech Solutions | <strong>Duration:</strong> 3 Months</p>
+        <h3>Pilot PLT-{{ pilot.pilot_id }} Metrics</h3>
+        <p><strong>Startup:</strong> {{ startup.name }} | <strong>Duration:</strong> {{ pilot.start_date }} to {{ pilot.end_date }}</p>
     </div>
 
     <table class="eval-table">
@@ -23,29 +23,29 @@
             </tr>
         </thead>
         <tbody>
+            {% for kpi in kpi_list %}
             <tr>
-                <td>Collection Time Reduction</td>
-                <td>20%</td>
-                <td>27%</td>
-                <td><span class="status-pass">Passed</span></td>
+                <td>{{ kpi.kpi_name }}</td>
+                <td>{{ kpi.target_value }} {{ kpi.unit }}</td>
+                <td>{{ kpi.actual_value }} {{ kpi.unit }}</td>
+                <td>
+                    {% if kpi.actual_value >= kpi.target_value %}
+                        <span class="status-pass">Passed</span>
+                    {% else %}
+                        <span class="score-badge medium">Needs Improvement</span>
+                    {% endif %}
+                </td>
             </tr>
+            {% else %}
             <tr>
-                <td>Unnecessary Trip Reduction</td>
-                <td>15%</td>
-                <td>18%</td>
-                <td><span class="status-pass">Passed</span></td>
+                <td colspan="4">No performance metrics recorded yet.</td>
             </tr>
-            <tr>
-                <td>Citizen Satisfaction Score</td>
-                <td>80%</td>
-                <td>85%</td>
-                <td><span class="status-pass">Passed</span></td>
-            </tr>
+            {% endfor %}
         </tbody>
     </table>
 
     <div style="margin-top: 1.5rem;">
-        <a href="/evaluator/recommendation?pilot_id=501" class="btn-action">Proceed to Final Decision</a>
+        <a href="{{ url_for('evaluator_recommendation', pilot_id=pilot.pilot_id) }}" class="btn-action">Proceed to Final Decision</a>
     </div>
 </div>
 {% endblock %}
