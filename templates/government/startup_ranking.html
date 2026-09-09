@@ -1,100 +1,121 @@
-{% extends "base.html" %} {% block title %}AI Startup Rankings - Innovation
+{% extends "base.html" %} {% block title %}Startup Ranking - Innovation
 Procurement Bridge{% endblock %} {% block content %}
-<div class="container py-4">
-  <!-- Header -->
+<div class="container-fluid py-4">
   <div class="d-flex justify-content-between align-items-center mb-4">
     <div>
-      <h2 class="fw-bold mb-1">AI-Powered Startup Evaluation</h2>
+      <h2 class="fw-bold mb-1">Readiness-Based Startup Ranking</h2>
       <p class="text-muted mb-0">
-        Automated feasibility, budget fit, and technical readiness scores for
-        applicants.
+        Compare startup applications using their readiness scores.
       </p>
     </div>
+
     <a
       href="{{ url_for('government.application_list') }}"
       class="btn btn-outline-secondary"
     >
-      <i class="bi bi-arrow-left"></i> Back to Applications
+      <i class="bi bi-arrow-left me-1"></i>
+      Back to Applications
     </a>
   </div>
 
-  <!-- Leaderboard Table -->
   <div class="card border-0 shadow-sm rounded-3">
-    <div class="card-body p-0">
+    <div class="card-body">
       <div class="table-responsive">
-        <table class="table table-hover align-middle mb-0">
-          <thead class="table-light">
+        <table class="table align-middle mb-0">
+          <thead>
             <tr>
-              <th scope="col" class="ps-4">Rank</th>
-              <th scope="col">Startup Name</th>
-              <th scope="col">Applied Challenge</th>
-              <th scope="col">Technical Score</th>
-              <th scope="col">Cost Score</th>
-              <th scope="col">Overall AI Match</th>
-              <th scope="col" class="text-end pe-4">Action</th>
+              <th>Rank</th>
+              <th>Startup</th>
+              <th>Challenge</th>
+              <th>Eligibility</th>
+              <th>Technology</th>
+              <th>Feasibility</th>
+              <th>Timeline</th>
+              <th>Experience</th>
+              <th>Readiness Score</th>
+              <th>Action</th>
             </tr>
           </thead>
+
           <tbody>
+            {% if applications %} {% for application in applications %}
+
             <tr>
-              <td class="ps-4 fw-bold text-primary">#1</td>
-              <td class="fw-semibold">NeuralTraffic Tech</td>
-              <td>Smart Traffic Management System</td>
               <td>
-                <span class="badge bg-success-subtle text-success">94/100</span>
+                <span class="fw-bold"> {{ loop.index }} </span>
               </td>
+
               <td>
-                <span class="badge bg-success-subtle text-success">90/100</span>
+                <span class="fw-semibold">
+                  {{ application.startup_name | default('—') }}
+                </span>
               </td>
-              <td><span class="fw-bold text-success">92% Match</span></td>
-              <td class="text-end pe-4">
+
+              <td>{{ application.challenge_title | default('—') }}</td>
+
+              <td>{{ application.eligibility_score | default('—') }}</td>
+
+              <td>{{ application.technology_score | default('—') }}</td>
+
+              <td>{{ application.feasibility_score | default('—') }}</td>
+
+              <td>{{ application.timeline_score | default('—') }}</td>
+
+              <td>{{ application.experience_score | default('—') }}</td>
+
+              <td>
+                {% if application.total_score is not none %}
+                <span class="badge bg-primary fs-6">
+                  {{ application.total_score }}
+                </span>
+                {% else %}
+                <span class="text-muted">—</span>
+                {% endif %}
+              </td>
+
+              <td>
                 <a
-                  href="{{ url_for('government.application_details') }}"
-                  class="btn btn-sm btn-primary"
-                  >Review Rank #1</a
-                >
-              </td>
-            </tr>
-            <tr>
-              <td class="ps-4 fw-bold text-primary">#2</td>
-              <td class="fw-semibold">HealthAI Systems</td>
-              <td>AI Medical Diagnostic Assistant</td>
-              <td>
-                <span class="badge bg-success-subtle text-success">91/100</span>
-              </td>
-              <td>
-                <span class="badge bg-info-subtle text-info">85/100</span>
-              </td>
-              <td><span class="fw-bold text-success">88% Match</span></td>
-              <td class="text-end pe-4">
-                <a
-                  href="{{ url_for('government.application_details') }}"
+                  href="{{ url_for(
+                                        'government.application_details',
+                                        application_id=application.application_id
+                                    ) }}"
                   class="btn btn-sm btn-outline-primary"
-                  >Review Rank #2</a
                 >
+                  View
+                </a>
               </td>
             </tr>
+
+            {% endfor %} {% else %}
+
             <tr>
-              <td class="ps-4 fw-bold text-secondary">#3</td>
-              <td class="fw-semibold">AgriCool Solutions</td>
-              <td>Solar-Powered Cold Storage Units</td>
-              <td>
-                <span class="badge bg-info-subtle text-info">82/100</span>
-              </td>
-              <td>
-                <span class="badge bg-success-subtle text-success">88/100</span>
-              </td>
-              <td><span class="fw-bold text-info">85% Match</span></td>
-              <td class="text-end pe-4">
-                <a
-                  href="{{ url_for('government.application_details') }}"
-                  class="btn btn-sm btn-outline-primary"
-                  >Review Rank #3</a
-                >
+              <td colspan="10" class="text-center py-5">
+                <i class="bi bi-bar-chart fs-1 text-muted"></i>
+
+                <h5 class="fw-bold mt-3">No Rankings Available</h5>
+
+                <p class="text-muted mb-0">
+                  Readiness scores are not available for any applications yet.
+                </p>
               </td>
             </tr>
+
+            {% endif %}
           </tbody>
         </table>
       </div>
+    </div>
+  </div>
+
+  <div class="card border-0 shadow-sm rounded-3 mt-4">
+    <div class="card-body">
+      <h6 class="fw-bold mb-2">About the Ranking</h6>
+
+      <p class="text-muted small mb-0">
+        Startups are ranked by their readiness score, with higher scores
+        appearing first. The ranking is intended to support government review
+        and does not automatically select a winner.
+      </p>
     </div>
   </div>
 </div>

@@ -9,7 +9,14 @@ Procurement Bridge{% endblock %} {% block content %}
     >
       <i class="bi bi-arrow-left"></i> Back to Applications
     </a>
-    <h2 class="fw-bold mb-0">Application Details: NeuralTraffic Tech</h2>
+
+    <div>
+      <h2 class="fw-bold mb-1">Application Details</h2>
+
+      <p class="text-muted mb-0">
+        Review the submitted startup proposal and readiness evaluation.
+      </p>
+    </div>
   </div>
 
   <div class="row g-4">
@@ -17,73 +24,101 @@ Procurement Bridge{% endblock %} {% block content %}
     <div class="col-lg-8">
       <div class="card border-0 shadow-sm rounded-3 mb-4">
         <div class="card-body p-4">
-          <h4 class="fw-bold mb-3">Proposed Solution Overview</h4>
+          <h4 class="fw-bold mb-3">Proposed Solution</h4>
+
           <p class="text-secondary">
-            NeuralTraffic Tech offers an edge-AI computer vision model that
-            integrates directly with existing municipal camera networks to
-            dynamically optimize traffic light signals in real-time.
+            {{ application.proposal | default(application.description) |
+            default('No proposal description available.') }}
           </p>
 
           <hr class="my-4" />
 
-          <h5 class="fw-bold mb-3">Technical Highlights</h5>
-          <ul class="text-secondary ps-3">
-            <li>Sub-50ms latency video processing at city intersections.</li>
-            <li>
-              Automated priority routing for emergency vehicles (ambulances,
-              fire engines).
-            </li>
-            <li>
-              Low-power IoT edge devices with cellular failover connectivity.
-            </li>
-          </ul>
+          <h5 class="fw-bold mb-3">Technical Details</h5>
+
+          <p class="text-secondary">
+            {{ application.technology | default('No technical details
+            available.') }}
+          </p>
 
           <hr class="my-4" />
 
-          <h5 class="fw-bold mb-3">Submitted Documents</h5>
-          <div class="d-flex gap-2">
-            <button class="btn btn-light border btn-sm">
-              <i class="bi bi-file-earmark-pdf text-danger me-1"></i> Technical
-              Proposal.pdf
-            </button>
-            <button class="btn btn-light border btn-sm">
-              <i class="bi bi-file-earmark-excel text-success me-1"></i>
-              Financial Breakup.xlsx
-            </button>
-          </div>
+          <h5 class="fw-bold mb-3">Implementation Timeline</h5>
+
+          <p class="text-secondary">
+            {{ application.timeline | default('No implementation timeline
+            available.') }}
+          </p>
+
+          <hr class="my-4" />
+
+          <h5 class="fw-bold mb-3">Application Status</h5>
+
+          {% if application.status %}
+          <span class="badge bg-primary-subtle text-primary">
+            {{ application.status }}
+          </span>
+          {% else %}
+          <span class="text-muted">Status not available</span>
+          {% endif %}
         </div>
       </div>
     </div>
 
-    <!-- Decision & Metrics Panel -->
+    <!-- Application Summary -->
     <div class="col-lg-4">
       <div class="card border-0 shadow-sm rounded-3 mb-4">
         <div class="card-body p-4">
-          <h5 class="fw-bold mb-3">Proposal Summary</h5>
+          <h5 class="fw-bold mb-3">Application Summary</h5>
+
+          <!-- Application ID -->
           <div class="mb-3">
-            <small class="text-muted d-block">Target Challenge</small>
-            <span class="fw-semibold">Smart Traffic Management System</span>
+            <small class="text-muted d-block"> Application ID </small>
+
+            <span class="fw-semibold"> {{ application.application_id }} </span>
           </div>
+
+          <!-- Startup -->
           <div class="mb-3">
-            <small class="text-muted d-block">Proposed Cost</small>
-            <span class="fw-semibold">₹22,50,000</span>
+            <small class="text-muted d-block"> Startup </small>
+
+            <span class="fw-semibold">
+              {{ application.startup_name | default('—') }}
+            </span>
           </div>
+
+          <!-- Challenge -->
           <div class="mb-3">
-            <small class="text-muted d-block">AI Feasibility Score</small>
-            <span class="badge bg-success-subtle text-success fs-6"
-              >92 / 100</span
-            >
+            <small class="text-muted d-block"> Target Challenge </small>
+
+            <span class="fw-semibold">
+              {{ application.challenge_title | default('—') }}
+            </span>
           </div>
 
           <hr class="my-4" />
 
-          <h5 class="fw-bold mb-3">Update Status</h5>
-          <div class="d-grid gap-2">
-            <button class="btn btn-success">Approve for Pilot</button>
-            <button class="btn btn-outline-warning">
-              Request Clarification
-            </button>
-            <button class="btn btn-outline-danger">Reject Application</button>
+          <!-- Readiness Score -->
+          <div class="mb-3">
+            <small class="text-muted d-block"> Readiness Score </small>
+
+            {% if score is defined and score is not none %}
+
+            <span class="badge bg-success-subtle text-success fs-6">
+              {{ score }} / 100
+            </span>
+
+            {% elif application.total_score is defined and
+            application.total_score is not none %}
+
+            <span class="badge bg-success-subtle text-success fs-6">
+              {{ application.total_score }} / 100
+            </span>
+
+            {% else %}
+
+            <span class="text-muted"> Not available </span>
+
+            {% endif %}
           </div>
         </div>
       </div>

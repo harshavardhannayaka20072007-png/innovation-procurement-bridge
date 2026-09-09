@@ -1,86 +1,112 @@
-{% extends "base.html" %} {% block title %}Pilot Projects - Innovation
+{% extends "base.html" %} {% block title %}Pilot Programs - Innovation
 Procurement Bridge{% endblock %} {% block content %}
-<div class="container py-4">
-  <!-- Header -->
+<div class="container-fluid py-4">
   <div class="d-flex justify-content-between align-items-center mb-4">
     <div>
-      <h2 class="fw-bold mb-1">Active Pilot Deployment</h2>
+      <h2 class="fw-bold mb-1">Pilot Programs</h2>
       <p class="text-muted mb-0">
-        Monitor live pilot implementations and trial project milestones.
+        Monitor active government pilot programs and milestone progress.
       </p>
     </div>
-    <a
-      href="{{ url_for('government.performance') }}"
-      class="btn btn-outline-primary"
-    >
-      <i class="bi bi-graph-up me-1"></i> Performance Metrics
-    </a>
   </div>
 
-  <!-- Active Pilots Table -->
   <div class="card border-0 shadow-sm rounded-3">
-    <div class="card-body p-0">
+    <div class="card-body">
       <div class="table-responsive">
-        <table class="table table-hover align-middle mb-0">
-          <thead class="table-light">
+        <table class="table align-middle mb-0">
+          <thead>
             <tr>
-              <th scope="col" class="ps-4">Project / Startup</th>
-              <th scope="col">Department</th>
-              <th scope="col">Location</th>
-              <th scope="col">Milestone Progress</th>
-              <th scope="col">Status</th>
-              <th scope="col" class="text-end pe-4">Action</th>
+              <th>Pilot ID</th>
+              <th>Startup</th>
+              <th>Challenge</th>
+              <th>Status</th>
+              <th>Milestone Progress</th>
+              <th>Action</th>
             </tr>
           </thead>
+
           <tbody>
+            {% if pilots %} {% for pilot in pilots %}
+
             <tr>
-              <td class="ps-4 fw-semibold">
-                NeuralTraffic Tech
-                <small class="d-block text-muted">Smart Traffic Pilot</small>
-              </td>
-              <td>Transport Dept</td>
-              <td>Bengaluru Zone 3</td>
               <td>
-                <div class="progress" style="height: 8px">
-                  <div class="progress-bar bg-success" style="width: 75%"></div>
+                <span class="fw-semibold"> {{ pilot.pilot_id }} </span>
+              </td>
+
+              <td>{{ pilot.startup_name | default('—') }}</td>
+
+              <td>{{ pilot.challenge_title | default('—') }}</td>
+
+              <td>
+                {% set status = pilot.status | default('Active') %} {% if status
+                == 'Completed' %}
+                <span class="badge bg-success"> {{ status }} </span>
+                {% elif status == 'Stopped' %}
+                <span class="badge bg-danger"> {{ status }} </span>
+                {% elif status == 'Active' %}
+                <span class="badge bg-primary"> {{ status }} </span>
+                {% else %}
+                <span class="badge bg-secondary"> {{ status }} </span>
+                {% endif %}
+              </td>
+
+              <td style="min-width: 180px">
+                {% set progress = pilot.milestone_progress | default(0) %}
+
+                <div class="d-flex justify-content-between mb-1">
+                  <small class="text-muted"> Progress </small>
+                  <small class="fw-semibold"> {{ progress }}% </small>
                 </div>
-                <small class="text-muted">75% Completed</small>
+
+                <div class="progress" style="height: 8px">
+                  <div
+                    class="progress-bar"
+                    role="progressbar"
+                    style="width: {{ progress }}%;"
+                    aria-valuenow="{{ progress }}"
+                    aria-valuemin="0"
+                    aria-valuemax="100"
+                  ></div>
+                </div>
               </td>
+
               <td>
-                <span class="badge bg-success-subtle text-success"
-                  >On Schedule</span
+                {% if pilot.pilot_id %}
+
+                <a
+                  href="{{ url_for(
+                                        'government.performance',
+                                        pilot_id=pilot.pilot_id
+                                    ) }}"
+                  class="btn btn-sm btn-outline-primary"
+                  data-pilot-id="{{ pilot.pilot_id }}"
                 >
-              </td>
-              <td class="text-end pe-4">
-                <button class="btn btn-sm btn-outline-primary">
-                  View Milestones
-                </button>
+                  View Performance
+                </a>
+
+                {% else %}
+
+                <span class="text-muted">—</span>
+
+                {% endif %}
               </td>
             </tr>
+
+            {% endfor %} {% else %}
+
             <tr>
-              <td class="ps-4 fw-semibold">
-                HealthAI Systems
-                <small class="d-block text-muted">Diagnostic Pilot</small>
-              </td>
-              <td>Health Dept</td>
-              <td>District Hospital</td>
-              <td>
-                <div class="progress" style="height: 8px">
-                  <div class="progress-bar bg-warning" style="width: 40%"></div>
-                </div>
-                <small class="text-muted">40% Completed</small>
-              </td>
-              <td>
-                <span class="badge bg-warning-subtle text-warning"
-                  >Review Needed</span
-                >
-              </td>
-              <td class="text-end pe-4">
-                <button class="btn btn-sm btn-outline-primary">
-                  View Milestones
-                </button>
+              <td colspan="6" class="text-center py-5">
+                <i class="bi bi-rocket fs-1 text-muted"></i>
+
+                <h5 class="fw-bold mt-3">No Pilot Programs</h5>
+
+                <p class="text-muted mb-0">
+                  No pilot programs are available yet.
+                </p>
               </td>
             </tr>
+
+            {% endif %}
           </tbody>
         </table>
       </div>

@@ -1,94 +1,233 @@
-{% extends "base.html" %} {% block title %}Applications List - Innovation
+{% extends "base.html" %} {% block title %}Application Details - Innovation
 Procurement Bridge{% endblock %} {% block content %}
-<div class="container py-4">
-  <!-- Header -->
+<div class="container-fluid py-4">
   <div class="d-flex justify-content-between align-items-center mb-4">
     <div>
-      <h2 class="fw-bold mb-1">Submitted Applications</h2>
+      <h2 class="fw-bold mb-1">Application Details</h2>
       <p class="text-muted mb-0">
-        Review proposals submitted by startups for government challenges.
+        Review startup application details and readiness score.
       </p>
     </div>
+
     <a
-      href="{{ url_for('government.startup_ranking') }}"
-      class="btn btn-outline-primary"
+      href="{{ url_for('government.application_list') }}"
+      class="btn btn-outline-secondary"
     >
-      <i class="bi bi-bar-chart-line me-1"></i> View AI Rankings
+      <i class="bi bi-arrow-left me-1"></i>
+      Back to Applications
     </a>
   </div>
 
-  <!-- Applications Table -->
-  <div class="card border-0 shadow-sm rounded-3">
-    <div class="card-body p-0">
-      <div class="table-responsive">
-        <table class="table table-hover align-middle mb-0">
-          <thead class="table-light">
-            <tr>
-              <th scope="col" class="ps-4">Startup Name</th>
-              <th scope="col">Challenge</th>
-              <th scope="col">Submission Date</th>
-              <th scope="col">Proposed Cost</th>
-              <th scope="col">Status</th>
-              <th scope="col" class="text-end pe-4">Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td class="ps-4 fw-semibold">NeuralTraffic Tech</td>
-              <td>Smart Traffic Management System</td>
-              <td>02 Sep 2026</td>
-              <td>₹22,50,000</td>
-              <td>
-                <span class="badge bg-warning-subtle text-warning"
-                  >Under Review</span
-                >
-              </td>
-              <td class="text-end pe-4">
-                <a
-                  href="{{ url_for('government.application_details') }}"
-                  class="btn btn-sm btn-primary"
-                  >Review Proposal</a
-                >
-              </td>
-            </tr>
-            <tr>
-              <td class="ps-4 fw-semibold">AgriCool Solutions</td>
-              <td>Solar-Powered Cold Storage Units</td>
-              <td>05 Sep 2026</td>
-              <td>₹38,00,000</td>
-              <td>
-                <span class="badge bg-info-subtle text-info">Shortlisted</span>
-              </td>
-              <td class="text-end pe-4">
-                <a
-                  href="{{ url_for('government.application_details') }}"
-                  class="btn btn-sm btn-primary"
-                  >Review Proposal</a
-                >
-              </td>
-            </tr>
-            <tr>
-              <td class="ps-4 fw-semibold">HealthAI Systems</td>
-              <td>AI Medical Diagnostic Assistant</td>
-              <td>28 Aug 2026</td>
-              <td>₹29,00,000</td>
-              <td>
-                <span class="badge bg-success-subtle text-success"
-                  >Approved for Pilot</span
-                >
-              </td>
-              <td class="text-end pe-4">
-                <a
-                  href="{{ url_for('government.application_details') }}"
-                  class="btn btn-sm btn-outline-secondary"
-                  >View Details</a
-                >
-              </td>
-            </tr>
-          </tbody>
-        </table>
+  {% if application %}
+
+  <div class="row g-4">
+    <!-- Application Information -->
+    <div class="col-lg-8">
+      <div class="card border-0 shadow-sm rounded-3 mb-4">
+        <div class="card-body">
+          <h5 class="fw-bold mb-4">Application Information</h5>
+
+          <div class="row g-4">
+            <div class="col-md-6">
+              <small class="text-muted d-block mb-1"> Application ID </small>
+              <span class="fw-semibold">
+                {{ application.application_id }}
+              </span>
+            </div>
+
+            <div class="col-md-6">
+              <small class="text-muted d-block mb-1"> Status </small>
+
+              {% set status = application.status | default('Submitted') %} {% if
+              status == 'Approved for Pilot' %}
+              <span class="badge bg-success"> {{ status }} </span>
+              {% elif status == 'Rejected' %}
+              <span class="badge bg-danger"> {{ status }} </span>
+              {% elif status == 'Shortlisted' %}
+              <span class="badge bg-primary"> {{ status }} </span>
+              {% elif status == 'Under Review' %}
+              <span class="badge bg-warning text-dark"> {{ status }} </span>
+              {% else %}
+              <span class="badge bg-secondary"> {{ status }} </span>
+              {% endif %}
+            </div>
+
+            <div class="col-md-6">
+              <small class="text-muted d-block mb-1"> Startup </small>
+              <span class="fw-semibold">
+                {{ application.startup_name | default('—') }}
+              </span>
+            </div>
+
+            <div class="col-md-6">
+              <small class="text-muted d-block mb-1"> Challenge </small>
+              <span class="fw-semibold">
+                {{ application.challenge_title | default('—') }}
+              </span>
+            </div>
+
+            {% if application.description %}
+            <div class="col-12">
+              <small class="text-muted d-block mb-1">
+                Application Description
+              </small>
+              <p class="mb-0">{{ application.description }}</p>
+            </div>
+            {% endif %} {% if application.proposal %}
+            <div class="col-12">
+              <small class="text-muted d-block mb-1"> Proposal </small>
+              <p class="mb-0">{{ application.proposal }}</p>
+            </div>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+
+      <!-- Readiness Score -->
+      <div class="card border-0 shadow-sm rounded-3">
+        <div class="card-body">
+          <h5 class="fw-bold mb-4">Readiness Assessment</h5>
+
+          {% if application.total_score is not none %}
+
+          <div class="text-center mb-4">
+            <div class="display-4 fw-bold">{{ application.total_score }}</div>
+            <div class="text-muted">Readiness Score</div>
+          </div>
+
+          {% if application.eligibility_score is not none or
+          application.technology_score is not none or
+          application.feasibility_score is not none or
+          application.timeline_score is not none or application.experience_score
+          is not none %}
+
+          <div class="row g-3">
+            {% if application.eligibility_score is not none %}
+            <div class="col-md-6">
+              <div class="border rounded-3 p-3">
+                <small class="text-muted d-block"> Eligibility </small>
+                <strong> {{ application.eligibility_score }} </strong>
+              </div>
+            </div>
+            {% endif %} {% if application.technology_score is not none %}
+            <div class="col-md-6">
+              <div class="border rounded-3 p-3">
+                <small class="text-muted d-block"> Technology </small>
+                <strong> {{ application.technology_score }} </strong>
+              </div>
+            </div>
+            {% endif %} {% if application.feasibility_score is not none %}
+            <div class="col-md-6">
+              <div class="border rounded-3 p-3">
+                <small class="text-muted d-block"> Feasibility </small>
+                <strong> {{ application.feasibility_score }} </strong>
+              </div>
+            </div>
+            {% endif %} {% if application.timeline_score is not none %}
+            <div class="col-md-6">
+              <div class="border rounded-3 p-3">
+                <small class="text-muted d-block"> Timeline </small>
+                <strong> {{ application.timeline_score }} </strong>
+              </div>
+            </div>
+            {% endif %} {% if application.experience_score is not none %}
+            <div class="col-md-6">
+              <div class="border rounded-3 p-3">
+                <small class="text-muted d-block"> Experience </small>
+                <strong> {{ application.experience_score }} </strong>
+              </div>
+            </div>
+            {% endif %}
+          </div>
+
+          {% else %}
+
+          <div class="alert alert-light border mb-0">
+            Detailed score breakdown is not available.
+          </div>
+
+          {% endif %} {% else %}
+
+          <div class="alert alert-light border mb-0">
+            A readiness score is not available for this application yet.
+          </div>
+
+          {% endif %}
+        </div>
+      </div>
+    </div>
+
+    <!-- Actions -->
+    <div class="col-lg-4">
+      <div class="card border-0 shadow-sm rounded-3 mb-4">
+        <div class="card-body">
+          <h5 class="fw-bold mb-3">Application Actions</h5>
+
+          <div class="d-grid gap-2">
+            {% if application.status == 'Submitted' or application.status ==
+            'Under Review' %}
+
+            <button
+              type="button"
+              class="btn btn-primary"
+              data-application-id="{{ application.application_id }}"
+              data-action="review"
+            >
+              <i class="bi bi-check2-circle me-1"></i>
+              Mark for Review
+            </button>
+
+            {% endif %} {% if application.status == 'Shortlisted' %}
+
+            <button
+              type="button"
+              class="btn btn-success"
+              data-application-id="{{ application.application_id }}"
+              data-action="pilot"
+            >
+              <i class="bi bi-rocket-takeoff me-1"></i>
+              Proceed to Pilot
+            </button>
+
+            {% endif %}
+          </div>
+        </div>
+      </div>
+
+      <div class="card border-0 shadow-sm rounded-3">
+        <div class="card-body">
+          <h6 class="fw-bold mb-2">Assessment Note</h6>
+
+          <p class="text-muted small mb-0">
+            The readiness score supports government review and comparison of
+            startup applications. It does not automatically select a winner.
+          </p>
+        </div>
       </div>
     </div>
   </div>
+
+  {% else %}
+
+  <div class="card border-0 shadow-sm rounded-3">
+    <div class="card-body text-center py-5">
+      <i class="bi bi-file-earmark-x fs-1 text-muted"></i>
+
+      <h5 class="fw-bold mt-3">Application Not Found</h5>
+
+      <p class="text-muted mb-4">
+        The selected application could not be found.
+      </p>
+
+      <a
+        href="{{ url_for('government.application_list') }}"
+        class="btn btn-primary"
+      >
+        Back to Applications
+      </a>
+    </div>
+  </div>
+
+  {% endif %}
 </div>
 {% endblock %}
