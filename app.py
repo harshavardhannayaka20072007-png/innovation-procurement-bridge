@@ -1,7 +1,7 @@
 import os
 import sys
 
-# Ensure project root is in Python path for database connection imports
+# Must be at the top: Adds project root to Python search path
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
 from flask import Flask
