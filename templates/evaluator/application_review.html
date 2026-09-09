@@ -1,55 +1,29 @@
-{% extends "base.html" %}
-{% block title %}Application Review | Innovation Procurement Bridge{% endblock %}
-
-{% block content %}
-<link rel="stylesheet" href="{{ url_for('static', filename='css/evaluator.css') }}">
-
-<div class="eval-container">
-    <h2>Application Evaluation</h2>
-    <p class="subtitle">Review proposal details and submit qualitative evaluation scores.</p>
-
-    <div class="details-card">
-        <h3>Application #APP-{{ application.application_id }}: {{ startup.name }}</h3>
-        <p><strong>Challenge:</strong> {{ challenge.title }}</p>
-        <p><strong>Proposed Solution:</strong> {{ application.solution }}</p>
-        <p><strong>Technology Stack:</strong> {{ application.technology }}</p>
-        <p><strong>Implementation Timeline:</strong> {{ application.timeline }}</p>
+<form method="POST" action="/scores/evaluator" class="eval-form">
+    <input type="hidden" name="application_id" value="{{ application.application_id }}">
+    
+    <div class="form-group">
+        <label for="eligibility_score">Eligibility Score (Max 20):</label>
+        <input type="number" id="eligibility_score" name="eligibility_score" max="20" min="0" required>
+    </div>
+    <div class="form-group">
+        <label for="technology_score">Technology Score (Max 20):</label>
+        <input type="number" id="technology_score" name="technology_score" max="20" min="0" required>
+    </div>
+    <div class="form-group">
+        <label for="feasibility_score">Feasibility Score (Max 20):</label>
+        <input type="number" id="feasibility_score" name="feasibility_score" max="20" min="0" required>
+    </div>
+    <div class="form-group">
+        <label for="timeline_score">Timeline Score (Max 20):</label>
+        <input type="number" id="timeline_score" name="timeline_score" max="20" min="0" required>
+    </div>
+    <div class="form-group">
+        <label for="experience_score">Experience Score (Max 20):</label>
+        <input type="number" id="experience_score" name="experience_score" max="20" min="0" required>
     </div>
 
-    <form method="POST" action="/scores/" class="eval-form">
-        <input type="hidden" name="application_id" value="{{ application.application_id }}">
-
-        <h3>Scoring Criteria (Max 20 Points Each)</h3>
-        
-        <div class="form-group">
-            <label for="eligibility_score">Eligibility Score (Max 20):</label>
-            <input type="number" id="eligibility_score" name="eligibility_score" max="20" min="0" placeholder="0 - 20" required>
-        </div>
-
-        <div class="form-group">
-            <label for="technology_score">Technology & Innovation Score (Max 20):</label>
-            <input type="number" id="technology_score" name="technology_score" max="20" min="0" placeholder="0 - 20" required>
-        </div>
-
-        <div class="form-group">
-            <label for="feasibility_score">Technical Feasibility Score (Max 20):</label>
-            <input type="number" id="feasibility_score" name="feasibility_score" max="20" min="0" placeholder="0 - 20" required>
-        </div>
-
-        <div class="form-group">
-            <label for="timeline_score">Timeline & Realism Score (Max 20):</label>
-            <input type="number" id="timeline_score" name="timeline_score" max="20" min="0" placeholder="0 - 20" required>
-        </div>
-
-        <div class="form-group">
-            <label for="experience_score">Team Experience & Capability Score (Max 20):</label>
-            <input type="number" id="experience_score" name="experience_score" max="20" min="0" placeholder="0 - 20" required>
-        </div>
-
-        <div class="btn-group">
-            <button type="submit" class="btn-action">Submit Evaluation Score</button>
-            <a href="/evaluator/dashboard" class="btn-action secondary">Cancel</a>
-        </div>
-    </form>
-</div>
-{% endblock %}
+    <div class="btn-group">
+        <button type="submit" class="btn-action">Submit Evaluation Score</button>
+        <a href="/evaluator/dashboard" class="btn-action secondary">Cancel</a>
+    </div>
+</form>

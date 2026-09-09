@@ -5,7 +5,7 @@
 <link rel="stylesheet" href="{{ url_for('static', filename='css/evaluator.css') }}">
 
 <div class="eval-container">
-    <h2>Final Procurement Decision</h2>
+    <h2>Final Recommendation</h2>
     <p class="subtitle">Recommend the strategic next step based on pilot performance data.</p>
 
     <div class="details-card">
@@ -21,7 +21,7 @@
         <div class="form-group">
             <label for="decision">Strategic Recommendation:</label>
             <select id="decision" name="decision" class="decision-select" required>
-                <option value="SCALE">SCALE (Expand procurement)</option>
+                <option value="SCALE">SCALE (Proceed toward wider procurement)</option>
                 <option value="IMPROVE">IMPROVE (Extend pilot for refinements)</option>
                 <option value="STOP">STOP (Terminate pilot)</option>
             </select>

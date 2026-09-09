@@ -25,8 +25,7 @@
         </ul>
     </div>
 
-    <!-- Note: Updating milestone status requires a BACKEND INTEGRATION REQUIREMENT endpoint -->
-    <form class="eval-form">
+    <form method="POST" action="/milestones/update_status" class="eval-form">
         <input type="hidden" name="milestone_id" value="{{ milestone.milestone_id }}">
         
         <div class="form-group">
