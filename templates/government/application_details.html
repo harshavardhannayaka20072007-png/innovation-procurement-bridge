@@ -1,0 +1,128 @@
+{% extends "base.html" %} {% block title %}Application Details - Innovation
+Procurement Bridge{% endblock %} {% block content %}
+<div class="container py-4">
+  <!-- Header -->
+  <div class="d-flex align-items-center mb-4">
+    <a
+      href="{{ url_for('government.application_list') }}"
+      class="btn btn-outline-secondary btn-sm me-3"
+    >
+      <i class="bi bi-arrow-left"></i> Back to Applications
+    </a>
+
+    <div>
+      <h2 class="fw-bold mb-1">Application Details</h2>
+
+      <p class="text-muted mb-0">
+        Review the submitted startup proposal and readiness evaluation.
+      </p>
+    </div>
+  </div>
+
+  <div class="row g-4">
+    <!-- Main Application Info -->
+    <div class="col-lg-8">
+      <div class="card border-0 shadow-sm rounded-3 mb-4">
+        <div class="card-body p-4">
+          <h4 class="fw-bold mb-3">Proposed Solution</h4>
+
+          <p class="text-secondary">
+            {{ application.proposal | default(application.description) |
+            default('No proposal description available.') }}
+          </p>
+
+          <hr class="my-4" />
+
+          <h5 class="fw-bold mb-3">Technical Details</h5>
+
+          <p class="text-secondary">
+            {{ application.technology | default('No technical details
+            available.') }}
+          </p>
+
+          <hr class="my-4" />
+
+          <h5 class="fw-bold mb-3">Implementation Timeline</h5>
+
+          <p class="text-secondary">
+            {{ application.timeline | default('No implementation timeline
+            available.') }}
+          </p>
+
+          <hr class="my-4" />
+
+          <h5 class="fw-bold mb-3">Application Status</h5>
+
+          {% if application.status %}
+          <span class="badge bg-primary-subtle text-primary">
+            {{ application.status }}
+          </span>
+          {% else %}
+          <span class="text-muted">Status not available</span>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+
+    <!-- Application Summary -->
+    <div class="col-lg-4">
+      <div class="card border-0 shadow-sm rounded-3 mb-4">
+        <div class="card-body p-4">
+          <h5 class="fw-bold mb-3">Application Summary</h5>
+
+          <!-- Application ID -->
+          <div class="mb-3">
+            <small class="text-muted d-block"> Application ID </small>
+
+            <span class="fw-semibold"> {{ application.application_id }} </span>
+          </div>
+
+          <!-- Startup -->
+          <div class="mb-3">
+            <small class="text-muted d-block"> Startup </small>
+
+            <span class="fw-semibold">
+              {{ application.startup_name | default('—') }}
+            </span>
+          </div>
+
+          <!-- Challenge -->
+          <div class="mb-3">
+            <small class="text-muted d-block"> Target Challenge </small>
+
+            <span class="fw-semibold">
+              {{ application.challenge_title | default('—') }}
+            </span>
+          </div>
+
+          <hr class="my-4" />
+
+          <!-- Readiness Score -->
+          <div class="mb-3">
+            <small class="text-muted d-block"> Readiness Score </small>
+
+            {% if score is defined and score is not none %}
+
+            <span class="badge bg-success-subtle text-success fs-6">
+              {{ score }} / 100
+            </span>
+
+            {% elif application.total_score is defined and
+            application.total_score is not none %}
+
+            <span class="badge bg-success-subtle text-success fs-6">
+              {{ application.total_score }} / 100
+            </span>
+
+            {% else %}
+
+            <span class="text-muted"> Not available </span>
+
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

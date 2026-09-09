@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+{% block title %}Technical Evaluator Dashboard - Innovation Procurement Bridge{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+      <h2 class="fw-bold mb-1"><i class="bi bi-clipboard-check text-warning me-2"></i>Technical Evaluation Board</h2>
+      <p class="text-muted mb-0">Grade proposals across 5 readiness criteria and verify field pilot milestones.</p>
+    </div>
+  </div>
+
+  <!-- Metric Badges -->
+  <div class="row g-3 mb-4">
+    <div class="col-md-4">
+      <div class="card border-0 shadow-sm rounded-3">
+        <div class="card-body">
+          <span class="text-muted small fw-semibold">Pending Proposals for Review</span>
+          <h3 class="fw-bold my-2 text-warning">{{ pending_applications | length }}</h3>
+          <span class="badge bg-warning-subtle text-warning">Needs Scoring</span>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card border-0 shadow-sm rounded-3">
+        <div class="card-body">
+          <span class="text-muted small fw-semibold">Evaluated Proposals</span>
+          <h3 class="fw-bold my-2 text-primary">{{ evaluated_applications | length }}</h3>
+          <span class="badge bg-primary-subtle text-primary">Scores Submitted</span>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card border-0 shadow-sm rounded-3">
+        <div class="card-body">
+          <span class="text-muted small fw-semibold">Submitted Milestone Proofs</span>
+          <h3 class="fw-bold my-2 text-success">{{ submitted_milestones | length }}</h3>
+          <span class="badge bg-success-subtle text-success">Verification Queue</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Pending Applications Queue -->
+  <div class="card border-0 shadow-sm rounded-3 mb-4">
+    <div class="card-header bg-white py-3">
+      <h5 class="fw-bold mb-0"><i class="bi bi-list-stars me-2 text-primary"></i>Pending Application Scoring Queue</h5>
+    </div>
+    <div class="card-body p-0">
+      <div class="table-responsive">
+        <table class="table align-middle mb-0 table-hover">
+          <thead class="table-light">
+            <tr>
+              <th class="ps-4">App ID</th>
+              <th>Startup</th>
+              <th>Challenge Title</th>
+              <th>Status</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% if pending_applications %}
+              {% for app in pending_applications %}
+                <tr>
+                  <td class="ps-4 fw-semibold">#APP-{{ app.application_id }}</td>
+                  <td class="fw-bold">{{ app.startup_name }}</td>
+                  <td>{{ app.challenge_title }}</td>
+                  <td><span class="badge bg-warning text-dark">{{ app.status }}</span></td>
+                  <td>
+                    <a href="{{ url_for('evaluator.application_review', application_id=app.application_id) }}" class="btn btn-sm btn-primary fw-bold">
+                      <i class="bi bi-pencil-square me-1"></i> Grade & Score
+                    </a>
+                  </td>
+                </tr>
+              {% endfor %}
+            {% else %}
+              <tr>
+                <td colspan="5" class="text-center py-4 text-muted">No pending applications to evaluate right now.</td>
+              </tr>
+            {% endif %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

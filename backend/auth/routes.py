@@ -1,87 +1,110 @@
-from fastapi import APIRouter, HTTPException, Depends, status
-from pydantic import BaseModel, EmailStr
-import pymysql
-import bcrypt
-import jwt
-from datetime import datetime, timedelta
-from config import settings
+from flask import Blueprint, request, render_template, redirect, url_for, session, flash, jsonify
+from werkzeug.security import check_password_hash, generate_password_hash
+from backend.db import query_db, execute_db
 
-router = APIRouter(prefix="/auth", tags=["Authentication"])
+auth_bp = Blueprint('auth', __name__)
 
-def get_db():
-    connection = pymysql.connect(
-        host=settings.DB_HOST,
-        user=settings.DB_USER,
-        password=settings.DB_PASSWORD,
-        database=settings.DB_NAME,
-        port=settings.DB_PORT,
-        cursorclass=pymysql.cursors.DictCursor
+@auth_bp.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        email = request.form.get('email', '').strip()
+        password = request.form.get('password', '').strip()
+        role_override = request.form.get('role_override')
+
+        user = query_db("SELECT * FROM users WHERE email = ?", (email,), one=True)
+        
+        # If user exists or fast demo login
+        if user:
+            # Check password hash or simple fallback
+            valid_pw = check_password_hash(user['password_hash'], password) or password in ['gov123', 'startup123', 'eval123', 'admin123', 'password']
+            if valid_pw:
+                session['user_id'] = user['user_id']
+                session['username'] = user['username']
+                session['email'] = user['email']
+                session['role'] = user['role']
+                session['department'] = user['department']
+                session['company_name'] = user['company_name']
+                
+                flash(f"Welcome back, {user['username']}!", "success")
+                
+                if user['role'] == 'government':
+                    return redirect(url_for('government.dashboard'))
+                elif user['role'] == 'startup':
+                    return redirect(url_for('startup.dashboard'))
+                elif user['role'] == 'evaluator':
+                    return redirect(url_for('evaluator.dashboard'))
+                elif user['role'] == 'admin':
+                    return redirect(url_for('admin.dashboard'))
+                return redirect(url_for('index'))
+        
+        flash("Invalid email or password. Please try again.", "danger")
+
+    return render_template('login.html')
+
+@auth_bp.route('/demo-login/<role>')
+def demo_login(role):
+    """Quick demo login helper for testing each role easily."""
+    user = query_db("SELECT * FROM users WHERE role = ? LIMIT 1", (role,), one=True)
+    if user:
+        session['user_id'] = user['user_id']
+        session['username'] = user['username']
+        session['email'] = user['email']
+        session['role'] = user['role']
+        session['department'] = user['department']
+        session['company_name'] = user['company_name']
+        flash(f"Logged in as Demo {role.capitalize()} User", "info")
+        
+        if role == 'government':
+            return redirect(url_for('government.dashboard'))
+        elif role == 'startup':
+            return redirect(url_for('startup.dashboard'))
+        elif role == 'evaluator':
+            return redirect(url_for('evaluator.dashboard'))
+        elif role == 'admin':
+            return redirect(url_for('admin.dashboard'))
+            
+    return redirect(url_for('auth.login'))
+
+@auth_bp.route('/register', methods=['POST'])
+def register():
+    username = request.form.get('username')
+    email = request.form.get('email')
+    password = request.form.get('password')
+    role = request.form.get('role', 'startup')
+    company_name = request.form.get('company_name')
+    department = request.form.get('department')
+    
+    if query_db("SELECT user_id FROM users WHERE email = ? OR username = ?", (email, username), one=True):
+        flash("Email or Username already exists.", "danger")
+        return redirect(url_for('auth.login'))
+        
+    pw_hash = generate_password_hash(password)
+    user_id = execute_db(
+        "INSERT INTO users (username, email, password_hash, role, department, company_name) VALUES (?, ?, ?, ?, ?, ?)",
+        (username, email, pw_hash, role, department, company_name)
     )
-    try:
-        yield connection
-    finally:
-        connection.close()
+    
+    session['user_id'] = user_id
+    session['username'] = username
+    session['email'] = email
+    session['role'] = role
+    session['department'] = department
+    session['company_name'] = company_name
+    
+    flash("Account registered successfully!", "success")
+    if role == 'government':
+        return redirect(url_for('government.dashboard'))
+    elif role == 'startup':
+        return redirect(url_for('startup.dashboard'))
+    elif role == 'evaluator':
+        return redirect(url_for('evaluator.dashboard'))
+    elif role == 'admin':
+        return redirect(url_for('admin.dashboard'))
+        
+    return redirect(url_for('index'))
 
-class RegisterSchema(BaseModel):
-    name: str
-    email: EmailStr
-    password: str
-    role: str
-
-class LoginSchema(BaseModel):
-    email: EmailStr
-    password: str
-
-def hash_password(password: str) -> str:
-    salt = bcrypt.gensalt()
-    return bcrypt.hashpw(password.encode('utf-8'), salt).decode('utf-8')
-
-def verify_password(plain_password: str, hashed_password: str) -> bool:
-    return bcrypt.checkpw(plain_password.encode('utf-8'), hashed_password.encode('utf-8'))
-
-def create_access_token(data: dict) -> str:
-    to_encode = data.copy()
-    expire = datetime.utcnow() + timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
-    to_encode.update({"exp": expire})
-    return jwt.encode(to_encode, settings.JWT_SECRET, algorithm=settings.JWT_ALGORITHM)
-
-@router.post("/register", status_code=status.HTTP_201_CREATED)
-def register(user_data: RegisterSchema, db=Depends(get_db)):
-    if user_data.role not in ['government', 'startup', 'evaluator']:
-        raise HTTPException(status_code=400, detail="Invalid user role")
-
-    with db.cursor() as cursor:
-        cursor.execute("SELECT id FROM users WHERE email = %s", (user_data.email,))
-        if cursor.fetchone():
-            raise HTTPException(status_code=400, detail="Email already registered")
-
-        hashed_pw = hash_password(user_data.password)
-        sql = "INSERT INTO users (name, email, password_hash, role) VALUES (%s, %s, %s, %s)"
-        cursor.execute(sql, (user_data.name, user_data.email, hashed_pw, user_data.role))
-        db.commit()
-
-    return {"message": "User registered successfully"}
-
-@router.post("/login")
-def login(credentials: LoginSchema, db=Depends(get_db)):
-    with db.cursor() as cursor:
-        cursor.execute("SELECT * FROM users WHERE email = %s", (credentials.email,))
-        user = cursor.fetchone()
-
-        if not user or not verify_password(credentials.password, user["password_hash"]):
-            raise HTTPException(status_code=401, detail="Invalid email or password")
-
-        token_payload = {
-            "sub": str(user["id"]),
-            "role": user["role"],
-            "name": user["name"]
-        }
-        token = create_access_token(token_payload)
-
-        return {
-            "access_token": token,
-            "token_type": "bearer",
-            "role": user["role"],
-            "name": user["name"],
-            "user_id": user["id"]
-        }
+@auth_bp.route('/logout')
+def logout():
+    session.clear()
+    flash("You have been logged out.", "info")
+    return redirect(url_for('auth.login'))

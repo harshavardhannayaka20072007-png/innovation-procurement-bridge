@@ -1,0 +1,132 @@
+{% extends "base.html" %} {% block title %}Post New Challenge - Innovation
+Procurement Bridge{% endblock %} {% block content %}
+
+<div class="container py-4">
+  <!-- Header -->
+  <div class="d-flex align-items-center mb-4">
+    <a
+      href="{{ url_for('government.dashboard') }}"
+      class="btn btn-outline-secondary btn-sm me-3"
+    >
+      <i class="bi bi-arrow-left"></i>
+      Back to Dashboard
+    </a>
+
+    <h2 class="fw-bold mb-0">Post a New Problem Statement / Challenge</h2>
+  </div>
+
+  <!-- Challenge Form -->
+  <div class="card border-0 shadow-sm rounded-3">
+    <div class="card-body p-4">
+      <form id="challengeForm" action="/challenges/" method="POST">
+        <div class="row g-3">
+          <!-- Challenge Title -->
+          <div class="col-12">
+            <label for="title" class="form-label fw-semibold">
+              Challenge Title
+            </label>
+
+            <input
+              type="text"
+              class="form-control"
+              id="title"
+              name="title"
+              placeholder="Enter the challenge title"
+              required
+            />
+          </div>
+
+          <!-- Department -->
+          <div class="col-12">
+            <label for="department" class="form-label fw-semibold">
+              Department / Ministry
+            </label>
+
+            <input
+              type="text"
+              class="form-control"
+              id="department"
+              name="department"
+              placeholder="Enter the department or ministry"
+              required
+            />
+          </div>
+
+          <!-- Problem Description -->
+          <div class="col-12">
+            <label for="description" class="form-label fw-semibold">
+              Problem Statement Description
+            </label>
+
+            <textarea
+              class="form-control"
+              id="description"
+              name="description"
+              rows="5"
+              placeholder="Describe the problem, current bottleneck, and expected outcome..."
+              required
+            ></textarea>
+          </div>
+
+          <!-- Requirements -->
+          <div class="col-12">
+            <label for="requirements" class="form-label fw-semibold">
+              Requirements
+            </label>
+
+            <textarea
+              class="form-control"
+              id="requirements"
+              name="requirements"
+              rows="4"
+              placeholder="Describe the technical, functional, or implementation requirements..."
+              required
+            ></textarea>
+          </div>
+
+          <!-- Deadline -->
+          <div class="col-md-6">
+            <label for="deadline" class="form-label fw-semibold">
+              Application Deadline
+            </label>
+
+            <input
+              type="date"
+              class="form-control"
+              id="deadline"
+              name="deadline"
+              required
+            />
+          </div>
+
+          <!-- Workflow Information -->
+          <div class="col-12">
+            <div class="alert alert-info mb-0">
+              <i class="bi bi-info-circle me-1"></i>
+
+              The challenge will first be saved as
+              <strong>Draft</strong>. You can review it before publishing.
+            </div>
+          </div>
+
+          <!-- Action Buttons -->
+          <div class="col-12 d-flex justify-content-end gap-2 mt-4">
+            <a
+              href="{{ url_for('government.dashboard') }}"
+              class="btn btn-light px-4"
+            >
+              Cancel
+            </a>
+
+            <button type="submit" class="btn btn-primary px-4">
+              <i class="bi bi-save me-1"></i>
+              Save Draft
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

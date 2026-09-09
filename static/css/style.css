@@ -1,0 +1,91 @@
+/* Global Styling for Innovation Procurement Bridge (SIH 2026) */
+
+:root {
+  --primary-color: #0d6efd;
+  --primary-hover: #0b5ed7;
+  --secondary-color: #495057;
+  --bg-gradient: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  --nav-bg: #1e293b;
+  --card-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+}
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  background-color: #f4f6f9;
+  color: #212529;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.main-content {
+  flex: 1;
+}
+
+/* Navbar Branding */
+.navbar-brand {
+  font-weight: 700;
+  letter-spacing: -0.5px;
+}
+
+.navbar-brand span {
+  color: #38bdf8;
+}
+
+/* Cards & Elevated UI */
+.card {
+  border: none;
+  transition: transform 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+.card-hover:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1) !important;
+}
+
+/* Custom Badges */
+.badge-soft-primary {
+  background-color: #e0f2fe;
+  color: #0369a1;
+}
+
+.badge-soft-success {
+  background-color: #dcfce7;
+  color: #15803d;
+}
+
+.badge-soft-warning {
+  background-color: #fef9c3;
+  color: #a16207;
+}
+
+/* Demo Role Switcher Bar */
+.demo-role-bar {
+  background: #0f172a;
+  color: #94a3b8;
+  font-size: 0.85rem;
+}
+
+.demo-role-bar a {
+  color: #38bdf8;
+  text-decoration: none;
+  margin-left: 0.5rem;
+}
+
+.demo-role-bar a:hover {
+  text-decoration: underline;
+}
+
+/* Glassmorphism containers */
+.glass-card {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+}
+
+/* Footer */
+footer {
+  background: #0f172a;
+  color: #94a3b8;
+}

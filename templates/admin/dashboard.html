@@ -1,0 +1,109 @@
+{% extends "base.html" %}
+{% block title %}System Admin Dashboard - Innovation Procurement Bridge{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+      <h2 class="fw-bold mb-1"><i class="bi bi-gear-fill text-dark me-2"></i>System Administration Dashboard</h2>
+      <p class="text-muted mb-0">Platform overview, user management, and innovation procurement audit logs.</p>
+    </div>
+  </div>
+
+  <div class="row g-3 mb-4">
+    <div class="col-md-3">
+      <div class="card border-0 shadow-sm rounded-3">
+        <div class="card-body">
+          <span class="text-muted small fw-semibold">Total Platform Users</span>
+          <h3 class="fw-bold my-2 text-dark">{{ users_count }}</h3>
+          <span class="badge bg-secondary">System Accounts</span>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card border-0 shadow-sm rounded-3">
+        <div class="card-body">
+          <span class="text-muted small fw-semibold">Total Challenges</span>
+          <h3 class="fw-bold my-2 text-primary">{{ challenges_count }}</h3>
+          <span class="badge bg-primary-subtle text-primary">All Departments</span>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card border-0 shadow-sm rounded-3">
+        <div class="card-body">
+          <span class="text-muted small fw-semibold">Total Proposals</span>
+          <h3 class="fw-bold my-2 text-info">{{ applications_count }}</h3>
+          <span class="badge bg-info-subtle text-info">Startup Submissions</span>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card border-0 shadow-sm rounded-3">
+        <div class="card-body">
+          <span class="text-muted small fw-semibold">Active Pilots</span>
+          <h3 class="fw-bold my-2 text-success">{{ pilots_count }}</h3>
+          <span class="badge bg-success-subtle text-success">State Pilots</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row g-4">
+    <div class="col-lg-8">
+      <div class="card border-0 shadow-sm rounded-3">
+        <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
+          <h5 class="fw-bold mb-0"><i class="bi bi-people me-2"></i>Recently Registered System Users</h5>
+          <a href="{{ url_for('admin.users') }}" class="btn btn-sm btn-outline-secondary">View All Users</a>
+        </div>
+        <div class="card-body p-0">
+          <div class="table-responsive">
+            <table class="table align-middle mb-0">
+              <thead class="table-light">
+                <tr>
+                  <th class="ps-4">User</th>
+                  <th>Email</th>
+                  <th>Role</th>
+                  <th>Entity / Dept</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% if recent_users %}
+                  {% for u in recent_users %}
+                    <tr>
+                      <td class="ps-4 fw-bold">{{ u.username }}</td>
+                      <td>{{ u.email }}</td>
+                      <td>
+                        <span class="badge bg-dark">{{ u.role | upper }}</span>
+                      </td>
+                      <td>{{ u.department or u.company_name or '—' }}</td>
+                    </tr>
+                  {% endfor %}
+                {% else %}
+                  <tr>
+                    <td colspan="4" class="text-center py-4 text-muted">No users found.</td>
+                  </tr>
+                {% endif %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-lg-4">
+      <div class="card border-0 shadow-sm rounded-3">
+        <div class="card-header bg-white py-3">
+          <h5 class="fw-bold mb-0"><i class="bi bi-sliders me-2"></i>Quick Administration</h5>
+        </div>
+        <div class="card-body d-grid gap-2">
+          <a href="{{ url_for('admin.users') }}" class="btn btn-outline-dark text-start"><i class="bi bi-person-gear me-2"></i> Manage User Accounts</a>
+          <a href="{{ url_for('admin.departments') }}" class="btn btn-outline-dark text-start"><i class="bi bi-building me-2"></i> Department Registries</a>
+          <a href="{{ url_for('admin.challenges') }}" class="btn btn-outline-dark text-start"><i class="bi bi-journal-text me-2"></i> Moderate Challenges</a>
+          <a href="{{ url_for('admin.startups') }}" class="btn btn-outline-dark text-start"><i class="bi bi-briefcase me-2"></i> Registered Startups Directory</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

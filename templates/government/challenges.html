@@ -1,0 +1,143 @@
+{% extends "base.html" %} {% block title %}Manage Challenges - Innovation
+Procurement Bridge{% endblock %} {% block content %}
+
+<div class="container py-4">
+  <!-- Header -->
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+      <h2 class="fw-bold mb-1">Government Challenges</h2>
+
+      <p class="text-muted mb-0">
+        Track and manage all government innovation challenges.
+      </p>
+    </div>
+
+    <a
+      href="{{ url_for('government.create_challenge') }}"
+      class="btn btn-primary"
+    >
+      <i class="bi bi-plus-circle me-1"></i>
+      Create Challenge
+    </a>
+  </div>
+
+  <!-- Search -->
+  <div class="card border-0 shadow-sm rounded-3 mb-4">
+    <div class="card-body">
+      <form method="GET">
+        <div class="row g-3">
+          <div class="col-md-10">
+            <input
+              type="text"
+              name="search"
+              class="form-control"
+              placeholder="Search by challenge title or department..."
+              value="{{ request.args.get('search', '') }}"
+            />
+          </div>
+
+          <div class="col-md-2">
+            <button type="submit" class="btn btn-outline-primary w-100">
+              <i class="bi bi-search me-1"></i>
+              Search
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Challenges Table -->
+  <div class="card border-0 shadow-sm rounded-3">
+    <div class="card-body p-0">
+      <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0">
+          <thead class="table-light">
+            <tr>
+              <th scope="col" class="ps-4">Title</th>
+
+              <th scope="col">Department</th>
+
+              <th scope="col">Deadline</th>
+
+              <th scope="col">Applications</th>
+
+              <th scope="col">Status</th>
+
+              <th scope="col" class="text-end pe-4">Action</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            {% if challenges %} {% for challenge in challenges %}
+
+            <tr>
+              <!-- Challenge Title -->
+              <td class="ps-4 fw-semibold">{{ challenge.title }}</td>
+
+              <!-- Department -->
+              <td>{{ challenge.department }}</td>
+
+              <!-- Deadline -->
+              <td>
+                {% if challenge.deadline %} {{ challenge.deadline.strftime('%d
+                %b %Y') }} {% else %} — {% endif %}
+              </td>
+
+              <!-- Applications -->
+              <td>
+                <span class="badge bg-secondary">
+                  {{ challenge.application_count | default(0) }}
+                </span>
+              </td>
+
+              <!-- Status -->
+              <td>
+                {% if challenge.status == 'Published' %}
+
+                <span class="badge bg-success-subtle text-success">
+                  Published
+                </span>
+
+                {% else %}
+
+                <span class="badge bg-secondary-subtle text-secondary">
+                  Draft
+                </span>
+
+                {% endif %}
+              </td>
+
+              <!-- Action -->
+              <td class="text-end pe-4">
+                <a
+                  href="{{ url_for(
+                                            'government.application_list',
+                                            challenge_id=challenge.challenge_id
+                                        ) }}"
+                  class="btn btn-sm btn-outline-primary"
+                >
+                  View Applications
+                </a>
+              </td>
+            </tr>
+
+            {% endfor %} {% else %}
+
+            <tr>
+              <td colspan="6" class="text-center py-5 text-muted">
+                <i class="bi bi-inbox fs-2 d-block mb-2"></i>
+
+                No challenges found.
+              </td>
+            </tr>
+
+            {% endif %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

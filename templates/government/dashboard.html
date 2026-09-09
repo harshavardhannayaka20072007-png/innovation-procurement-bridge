@@ -1,0 +1,125 @@
+{% extends "base.html" %} {% block title %}Government Dashboard - Innovation
+Procurement Bridge{% endblock %} {% block content %}
+<div class="container-fluid py-4">
+  <!-- Header Section -->
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+      <h2 class="fw-bold mb-1">Government Portal Dashboard</h2>
+      <p class="text-muted mb-0">
+        Overview of challenges, startup applications, and pilot programs.
+      </p>
+    </div>
+
+    <a
+      href="{{ url_for('government.create_challenge') }}"
+      class="btn btn-primary"
+    >
+      <i class="bi bi-plus-circle me-1"></i>
+      Post New Challenge
+    </a>
+  </div>
+
+  <!-- Metrics Overview -->
+  <div class="row g-3 mb-4">
+    <!-- Challenges -->
+    <div class="col-md-3">
+      <div class="card border-0 shadow-sm rounded-3 h-100">
+        <div class="card-body">
+          <span class="text-muted fw-semibold small"> Total Challenges </span>
+
+          <h3 class="fw-bold my-2">{{ challenges_count | default(0) }}</h3>
+
+          <span class="badge bg-success-subtle text-success">
+            {{ closing_soon_count | default(0) }} Closing Soon
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Applications -->
+    <div class="col-md-3">
+      <div class="card border-0 shadow-sm rounded-3 h-100">
+        <div class="card-body">
+          <span class="text-muted fw-semibold small"> Total Applications </span>
+
+          <h3 class="fw-bold my-2">{{ applications_count | default(0) }}</h3>
+
+          <span class="badge bg-info-subtle text-info">
+            {{ under_review_count | default(0) }} Under Review
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Pilots -->
+    <div class="col-md-3">
+      <div class="card border-0 shadow-sm rounded-3 h-100">
+        <div class="card-body">
+          <span class="text-muted fw-semibold small"> Active Pilots </span>
+
+          <h3 class="fw-bold my-2">{{ pilots_count | default(0) }}</h3>
+
+          <span class="badge bg-primary-subtle text-primary">
+            {{ near_completion_count | default(0) }} Near Completion
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Database-supported information only -->
+    <div class="col-md-3">
+      <div class="card border-0 shadow-sm rounded-3 h-100">
+        <div class="card-body">
+          <span class="text-muted fw-semibold small"> Government Portal </span>
+
+          <h5 class="fw-bold my-3">Procurement Monitoring</h5>
+
+          <p class="text-muted small mb-0">
+            Monitor challenges, applications, pilots, milestones, and
+            performance from the government portal.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Quick Navigation Links -->
+  <div class="row g-3 mb-4">
+    <div class="col-md-3">
+      <a
+        href="{{ url_for('government.challenges') }}"
+        class="btn btn-outline-secondary w-100 py-2"
+      >
+        View All Challenges
+      </a>
+    </div>
+
+    <div class="col-md-3">
+      <a
+        href="{{ url_for('government.application_list') }}"
+        class="btn btn-outline-secondary w-100 py-2"
+      >
+        Manage Applications
+      </a>
+    </div>
+
+    <div class="col-md-3">
+      <a
+        href="{{ url_for('government.pilots') }}"
+        class="btn btn-outline-secondary w-100 py-2"
+      >
+        Monitor Pilots
+      </a>
+    </div>
+
+    <div class="col-md-3">
+      <a
+        href="{{ url_for('government.performance') }}"
+        class="btn btn-outline-secondary w-100 py-2"
+      >
+        Performance Analytics
+      </a>
+    </div>
+  </div>
+</div>
+{% endblock %}

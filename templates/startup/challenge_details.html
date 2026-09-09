@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% block title %}Challenge Details - Innovation Procurement Bridge{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+  <div class="mb-4">
+    <a href="{{ url_for('startup.challenges') }}" class="btn btn-outline-secondary btn-sm mb-3">
+      <i class="bi bi-arrow-left me-1"></i> Back to Challenges
+    </a>
+    <h2 class="fw-bold mb-1">{{ challenge.title if challenge else 'Challenge Not Found' }}</h2>
+    {% if challenge %}
+      <span class="badge bg-primary-subtle text-primary fs-6">{{ challenge.department }}</span>
+    {% endif %}
+  </div>
+
+  {% if challenge %}
+    <div class="row g-4">
+      <div class="col-lg-8">
+        <div class="card border-0 shadow-sm rounded-3 mb-4">
+          <div class="card-body p-4">
+            <h5 class="fw-bold mb-3"><i class="bi bi-file-text text-primary me-2"></i>Problem Statement Description</h5>
+            <p class="text-secondary leading-relaxed">{{ challenge.description }}</p>
+
+            <h5 class="fw-bold mt-4 mb-3"><i class="bi bi-list-check text-success me-2"></i>Technical & Functional Requirements</h5>
+            <div class="bg-light p-3 rounded-3 text-secondary">
+              {{ challenge.requirements }}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-4">
+        <div class="card border-0 shadow-sm rounded-3 mb-4">
+          <div class="card-body p-4">
+            <h5 class="fw-bold mb-3">Application Summary</h5>
+            <ul class="list-group list-group-flush mb-4">
+              <li class="list-group-item d-flex justify-content-between px-0">
+                <span class="text-muted">Deadline:</span>
+                <span class="fw-semibold text-danger">{{ challenge.deadline }}</span>
+              </li>
+              <li class="list-group-item d-flex justify-content-between px-0">
+                <span class="text-muted">Status:</span>
+                <span class="badge bg-success">Open for Proposals</span>
+              </li>
+            </ul>
+            <a href="{{ url_for('startup.apply', challenge_id=challenge.challenge_id) }}" class="btn btn-success w-100 py-2 fw-bold">
+              <i class="bi bi-send-fill me-1"></i> Submit Proposal Now
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  {% else %}
+    <div class="alert alert-warning">The specified challenge could not be found.</div>
+  {% endif %}
+</div>
+{% endblock %}

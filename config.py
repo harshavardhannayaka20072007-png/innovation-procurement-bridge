@@ -1,15 +1,11 @@
 import os
-from pydantic_settings import BaseSettings
 
-class Settings(BaseSettings):
-    DB_HOST: str = os.getenv("DB_HOST", "localhost")
-    DB_USER: str = os.getenv("DB_USER", "root")
-    DB_PASSWORD: str = os.getenv("DB_PASSWORD", "password")  # Set your local MySQL password here
-    DB_NAME: str = os.getenv("DB_NAME", "innovation_procurement")
-    DB_PORT: int = int(os.getenv("DB_PORT", 3306))
-    
-    JWT_SECRET: str = "super-secret-key-change-in-production"
-    JWT_ALGORITHM: str = "HS256"
-    ACCESS_TOKEN_EXPIRE_MINUTES: int = 120
+BASE_DIR = os.path.abspath(os.path.dirname(__file__))
 
-settings = Settings()
+class Config:
+    SECRET_KEY = os.environ.get('SECRET_KEY') or 'sih2026-maharashtra-innovation-bridge-secret'
+    DATABASE = os.path.join(BASE_DIR, 'database.db')
+    SCHEMA_PATH = os.path.join(BASE_DIR, 'database', 'schema.sql')
+    SEED_PATH = os.path.join(BASE_DIR, 'database', 'seed.sql')
+    UPLOAD_FOLDER = os.path.join(BASE_DIR, 'uploads')
+    MAX_CONTENT_LENGTH = 16 * 1024 * 1024  # 16 MB max file upload
