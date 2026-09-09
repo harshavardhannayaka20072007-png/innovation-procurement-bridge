@@ -1,87 +1,85 @@
-from fastapi import APIRouter, HTTPException, Depends, status
-from pydantic import BaseModel, EmailStr
-import pymysql
-import bcrypt
-import jwt
-from datetime import datetime, timedelta
-from config import settings
+from flask import Blueprint, request, jsonify, render_template, redirect, url_for, session
+from werkzeug.security import generate_password_hash, check_password_hash
+from database.connection import get_db_connection
 
-router = APIRouter(prefix="/auth", tags=["Authentication"])
+auth_bp = Blueprint('auth', __name__)
 
-def get_db():
-    connection = pymysql.connect(
-        host=settings.DB_HOST,
-        user=settings.DB_USER,
-        password=settings.DB_PASSWORD,
-        database=settings.DB_NAME,
-        port=settings.DB_PORT,
-        cursorclass=pymysql.cursors.DictCursor
-    )
+@auth_bp.route('/register', methods=['POST'])
+def register():
+    data = request.get_json() if request.is_json else request.form
+    name = data.get('name')
+    email = data.get('email')
+    password = data.get('password')
+    role = data.get('role')
+
+    if not name or not email or not password or not role:
+        return jsonify({"detail": "Missing required fields"}), 400
+
+    if role not in ['Government', 'Startup', 'Evaluator', 'Admin']:
+        return jsonify({"detail": "Invalid user role"}), 400
+
+    conn = get_db_connection()
+    cursor = conn.cursor(dictionary=True)
+
     try:
-        yield connection
-    finally:
-        connection.close()
-
-class RegisterSchema(BaseModel):
-    name: str
-    email: EmailStr
-    password: str
-    role: str
-
-class LoginSchema(BaseModel):
-    email: EmailStr
-    password: str
-
-def hash_password(password: str) -> str:
-    salt = bcrypt.gensalt()
-    return bcrypt.hashpw(password.encode('utf-8'), salt).decode('utf-8')
-
-def verify_password(plain_password: str, hashed_password: str) -> bool:
-    return bcrypt.checkpw(plain_password.encode('utf-8'), hashed_password.encode('utf-8'))
-
-def create_access_token(data: dict) -> str:
-    to_encode = data.copy()
-    expire = datetime.utcnow() + timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
-    to_encode.update({"exp": expire})
-    return jwt.encode(to_encode, settings.JWT_SECRET, algorithm=settings.JWT_ALGORITHM)
-
-@router.post("/register", status_code=status.HTTP_201_CREATED)
-def register(user_data: RegisterSchema, db=Depends(get_db)):
-    if user_data.role not in ['government', 'startup', 'evaluator']:
-        raise HTTPException(status_code=400, detail="Invalid user role")
-
-    with db.cursor() as cursor:
-        cursor.execute("SELECT id FROM users WHERE email = %s", (user_data.email,))
+        cursor.execute("SELECT id FROM users WHERE email = %s", (email,))
         if cursor.fetchone():
-            raise HTTPException(status_code=400, detail="Email already registered")
+            return jsonify({"detail": "Email already registered"}), 400
 
-        hashed_pw = hash_password(user_data.password)
-        sql = "INSERT INTO users (name, email, password_hash, role) VALUES (%s, %s, %s, %s)"
-        cursor.execute(sql, (user_data.name, user_data.email, hashed_pw, user_data.role))
-        db.commit()
+        hashed_pw = generate_password_hash(password)
+        cursor.execute(
+            "INSERT INTO users (name, email, password_hash, role) VALUES (%s, %s, %s, %s)",
+            (name, email, hashed_pw, role)
+        )
+        conn.commit()
+        return jsonify({"message": "User registered successfully"}), 201
+    finally:
+        cursor.close()
+        conn.close()
 
-    return {"message": "User registered successfully"}
+@auth_bp.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'GET':
+        return render_template('login.html')
 
-@router.post("/login")
-def login(credentials: LoginSchema, db=Depends(get_db)):
-    with db.cursor() as cursor:
-        cursor.execute("SELECT * FROM users WHERE email = %s", (credentials.email,))
+    data = request.get_json() if request.is_json else request.form
+    email = data.get('email')
+    password = data.get('password')
+
+    if not email or not password:
+        return jsonify({"detail": "Email and password required"}), 400
+
+    conn = get_db_connection()
+    cursor = conn.cursor(dictionary=True)
+
+    try:
+        cursor.execute("SELECT * FROM users WHERE email = %s", (email,))
         user = cursor.fetchone()
 
-        if not user or not verify_password(credentials.password, user["password_hash"]):
-            raise HTTPException(status_code=401, detail="Invalid email or password")
+        if not user or not check_password_hash(user['password_hash'], password):
+            return jsonify({"detail": "Invalid email or password"}), 401
 
-        token_payload = {
-            "sub": str(user["id"]),
-            "role": user["role"],
-            "name": user["name"]
-        }
-        token = create_access_token(token_payload)
+        session.clear()
+        session['user_id'] = user['id']
+        session['name'] = user['name']
+        session['email'] = user['email']
+        session['role'] = user['role']
 
-        return {
-            "access_token": token,
-            "token_type": "bearer",
-            "role": user["role"],
-            "name": user["name"],
-            "user_id": user["id"]
-        }
+        if request.is_json:
+            return jsonify({
+                "message": "Login successful",
+                "role": user['role'],
+                "user_id": user['id']
+            }), 200
+
+        return redirect(url_for('auth.dashboard'))
+    finally:
+        cursor.close()
+        conn.close()
+
+@auth_bp.route('/logout', methods=['GET', 'POST'])
+def logout():
+    session.clear()
+    if request.is_json:
+        return jsonify({"message": "Logged out successfully"}), 200
+    return redirect(url_for('auth.login'))
