@@ -1,4 +1,4 @@
-{% extends "base.html" %} {% block title %}Pilot Program{% endblock %} {% block
+{% extends "base.html" %} {% block title %}Active Pilots{% endblock %} {% block
 content %}
 <link
   rel="stylesheet"
@@ -6,19 +6,33 @@ content %}
 />
 
 <div class="startup-container">
-  <h2>Active Pilot Implementation</h2>
-  <div class="card">
-    <h3>{{ pilot.title }}</h3>
-    <p><strong>Department:</strong> {{ pilot.department }}</p>
-    <p><strong>Duration:</strong> {{ pilot.duration_months }} Months</p>
-    <p>
-      <strong>Status:</strong>
-      <span class="badge badge-warning">{{ pilot.status }}</span>
-    </p>
-    <br />
-    <a href="/startup/milestones/{{ pilot.id }}" class="btn"
-      >View Milestones & Upload Evidence</a
-    >
+  <h2>Active Pilot Projects</h2>
+
+  <div class="dashboard-grid">
+    {% for pilot in pilots %}
+    <div class="card">
+      <h3>{{ pilot.challenge_title }}</h3>
+      <p><strong>Department:</strong> {{ pilot.department }}</p>
+      <p>
+        <strong>Status:</strong> <span class="badge">{{ pilot.status }}</span>
+      </p>
+      <p><strong>Start Date:</strong> {{ pilot.start_date }}</p>
+      <p><strong>End Date:</strong> {{ pilot.end_date }}</p>
+      <p><strong>Objective:</strong> {{ pilot.objective }}</p>
+
+      <div style="margin-top: 1rem">
+        <a
+          href="{{ url_for('startup.milestones', pilot_id=pilot.pilot_id) }}"
+          class="btn"
+          >View Milestones</a
+        >
+      </div>
+    </div>
+    {% else %}
+    <div class="card">
+      <p>No active pilots assigned at the moment.</p>
+    </div>
+    {% endfor %}
   </div>
 </div>
 {% endblock %}

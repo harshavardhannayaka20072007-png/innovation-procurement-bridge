@@ -6,34 +6,44 @@ block content %}
 />
 
 <div class="startup-container">
-  <h2>Submitted Applications</h2>
-  <table class="table card">
-    <thead>
-      <tr>
-        <th>Challenge Title</th>
-        <th>Submitted Date</th>
-        <th>Readiness Score</th>
-        <th>Status</th>
-        <th>Action</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for app in applications %}
-      <tr>
-        <td>{{ app.challenge_title }}</td>
-        <td>{{ app.submitted_at }}</td>
-        <td><strong>{{ app.score | default('Calculating') }}</strong></td>
-        <td><span class="badge badge-info">{{ app.status }}</span></td>
-        <td>
-          <a href="/startup/applications/{{ app.id }}" class="btn">Details</a>
-        </td>
-      </tr>
-      {% else %}
-      <tr>
-        <td colspan="5">No submitted applications found.</td>
-      </tr>
-      {% endfor %}
-    </tbody>
-  </table>
+  <h2>My Submitted Applications</h2>
+
+  <div class="card">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Application ID</th>
+          <th>Challenge</th>
+          <th>Readiness Score</th>
+          <th>Status</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for app in applications %}
+        <tr>
+          <td>#{{ app.application_id }}</td>
+          <td>{{ app.challenge_title }}</td>
+          <td>
+            {% if app.total_score is not none %} {{ app.total_score }}/100 {%
+            else %} Not Evaluated {% endif %}
+          </td>
+          <td><span class="badge">{{ app.status }}</span></td>
+          <td>
+            <a
+              href="{{ url_for('startup.application_details', application_id=app.application_id) }}"
+              class="btn btn-sm"
+              >View Details</a
+            >
+          </td>
+        </tr>
+        {% else %}
+        <tr>
+          <td colspan="5">No applications submitted yet.</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
 </div>
 {% endblock %}

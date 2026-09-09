@@ -1,39 +1,39 @@
-document.addEventListener("DOMContentLoaded", () => {
-  // Handle Application Submission Form
-  const applyForm = document.getElementById("startup-apply-form");
-  if (applyForm) {
-    applyForm.addEventListener("submit", async (e) => {
+document.addEventListener("DOMContentLoaded", function () {
+  const applicationForm = document.getElementById("applicationForm");
+  const formResponse = document.getElementById("formResponse");
+
+  if (applicationForm) {
+    applicationForm.addEventListener("submit", async function (e) {
       e.preventDefault();
-      const formData = new FormData(applyForm);
-      const data = Object.fromEntries(formData.entries());
+
+      const formData = new FormData(applicationForm);
+      const data = {
+        challenge_id: parseInt(formData.get("challenge_id")),
+        solution: formData.get("solution"),
+        technology: formData.get("technology"),
+        timeline: formData.get("timeline")
+      };
 
       try {
-        const response = await fetch("/startup/apply", {
+        const response = await fetch("/applications/", {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(data),
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(data)
         });
+
         const result = await response.json();
-        if (result.success) {
-          alert("Application submitted successfully!");
-          window.location.href = "/startup/applications";
+
+        if (response.ok) {
+          formResponse.innerHTML = `<div class="alert alert-success">${result.message || "Application submitted successfully!"}</div>`;
+          applicationForm.reset();
         } else {
-          alert("Error: " + result.message);
+          formResponse.innerHTML = `<div class="alert alert-danger">${result.message || "Failed to submit application."}</div>`;
         }
       } catch (err) {
-        console.error("Submission failed:", err);
-      }
-    });
-  }
-
-  // Dynamic Score Calculation Preview
-  const calculateScoreBtn = document.getElementById("calc-score-btn");
-  if (calculateScoreBtn) {
-    calculateScoreBtn.addEventListener("click", () => {
-      // Mock score preview logic for UI testing
-      const scorePreview = document.getElementById("score-preview");
-      if (scorePreview) {
-        scorePreview.innerText = "Estimated Readiness Score: 88/100";
+        console.error("Submission error:", err);
+        formResponse.innerHTML = `<div class="alert alert-danger">Unable to submit application. Please try again.</div>`;
       }
     });
   }

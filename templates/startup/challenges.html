@@ -13,7 +13,9 @@
       <h3>{{ challenge.title }}</h3>
       <p><strong>Department:</strong> {{ challenge.department }}</p>
       <p>{{ challenge.description | truncate(120) }}</p>
-      <a href="/startup/challenges/{{ challenge.id }}" class="btn"
+      <a
+        href="{{ url_for('startup.challenge_details', challenge_id=challenge.challenge_id) }}"
+        class="btn"
         >View Details</a
       >
     </div>

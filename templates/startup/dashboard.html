@@ -6,23 +6,47 @@ block content %}
 />
 
 <div class="startup-container">
-  <h2>Startup Dashboard</h2>
+  <div
+    style="display: flex; justify-content: space-between; align-items: center"
+  >
+    <h2>Startup Dashboard</h2>
+    <span class="badge badge-success">DPIIT Verified</span>
+  </div>
+
   <div class="dashboard-grid">
     <div class="card metric-card">
       <h3>Active Applications</h3>
-      <p class="metric-value">{{ applications_count | default(0) }}</p>
-      <a href="/startup/applications" class="btn">View All</a>
+      <p class="metric-value">
+        {{ applications_count if applications_count is not none else 0 }}
+      </p>
+      <a href="{{ url_for('startup.applications') }}" class="btn"
+        >View Applications</a
+      >
     </div>
+
     <div class="card metric-card">
       <h3>Active Pilots</h3>
-      <p class="metric-value">{{ pilots_count | default(0) }}</p>
-      <a href="/startup/pilot" class="btn">View Pilots</a>
+      <p class="metric-value">
+        {{ pilots_count if pilots_count is not none else 0 }}
+      </p>
+      <a href="{{ url_for('startup.pilot') }}" class="btn">Track Pilots</a>
     </div>
+
     <div class="card metric-card">
       <h3>Readiness Score</h3>
-      <p class="metric-value">{{ readiness_score | default('N/A') }}</p>
-      <a href="/startup/profile" class="btn">Update Profile</a>
+      <p class="metric-value">
+        {% if readiness_score is not none and readiness_score != 'N/A' %} {{
+        readiness_score }}/100 {% else %} N/A {% endif %}
+      </p>
+      <a href="{{ url_for('startup.profile') }}" class="btn">View Profile</a>
     </div>
+  </div>
+
+  <div class="card" style="margin-top: 2rem">
+    <h3>Recommended Open Challenges</h3>
+    <a href="{{ url_for('startup.challenges') }}" class="btn btn-secondary"
+      >Browse All Challenges</a
+    >
   </div>
 </div>
 {% endblock %}

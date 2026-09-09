@@ -7,18 +7,42 @@ block content %}
 
 <div class="startup-container">
   <div class="card">
-    <h2>
-      Application Status:
-      <span class="badge badge-success">{{ application.status }}</span>
-    </h2>
+    <h2>Application #{{ application.application_id }}</h2>
     <p><strong>Challenge:</strong> {{ application.challenge_title }}</p>
     <p>
-      <strong>Automated Readiness Score:</strong> {{ application.total_score
-      }}/100
+      <strong>Status:</strong>
+      <span class="badge">{{ application.status }}</span>
     </p>
+    <p>
+      <strong>Readiness Score:</strong>
+      {% if application.total_score is not none %} {{ application.total_score
+      }}/100 {% else %} Not evaluated yet {% endif %}
+    </p>
+
     <hr />
+
     <h3>Submitted Proposal</h3>
-    <p>{{ application.solution }}</p>
+
+    <div style="margin-bottom: 1rem">
+      <h4>Proposed Solution</h4>
+      <p>{{ application.solution }}</p>
+    </div>
+
+    <div style="margin-bottom: 1rem">
+      <h4>Technology Stack</h4>
+      <p>{{ application.technology }}</p>
+    </div>
+
+    <div style="margin-bottom: 1rem">
+      <h4>Estimated Timeline</h4>
+      <p>{{ application.timeline }}</p>
+    </div>
+
+    <div style="margin-top: 1.5rem">
+      <a href="{{ url_for('startup.applications') }}" class="btn btn-secondary"
+        >Back to Applications</a
+      >
+    </div>
   </div>
 </div>
 {% endblock %}
