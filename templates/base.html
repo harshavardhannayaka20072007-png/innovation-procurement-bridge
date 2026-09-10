@@ -21,28 +21,6 @@
 </head>
 <body data-user-role="{{ session.get('role', 'user') }}">
 
-  {% if not session.get('user_id') %}
-  <!-- Demo role selection is available only before authentication. -->
-  <div class="demo-role-bar py-1 px-3 border-bottom">
-    <div class="container-fluid d-flex justify-content-between align-items-center">
-      <div>
-        <small class="fw-semibold text-light me-2"><i class="bi bi-shield-lock me-1"></i>SIH 2026 Demo Portal Switcher:</small>
-        <a href="{{ url_for('auth.demo_login', role='government') }}"><span class="badge bg-primary">Gov Portal</span></a>
-        <a href="{{ url_for('auth.demo_login', role='startup') }}"><span class="badge bg-success">Startup Portal</span></a>
-        <a href="{{ url_for('auth.demo_login', role='evaluator') }}"><span class="badge bg-warning text-dark">Evaluator Portal</span></a>
-        <a href="{{ url_for('auth.demo_login', role='admin') }}"><span class="badge bg-dark border">Admin Portal</span></a>
-      </div>
-      <div>
-        {% if session.get('username') %}
-          <small class="text-light">Role: <strong class="text-info">{{ session.get('role') | upper if session.get('role') else '' }}</strong> ({{ session.get('username') }})</small>
-        {% else %}
-          <small class="text-light">Not Logged In</small>
-        {% endif %}
-      </div>
-    </div>
-  </div>
-  {% endif %}
-
   <!-- Primary Navbar -->
   <nav class="navbar navbar-expand-lg navbar-dark portal-navbar shadow-sm">
     <div class="container-fluid">

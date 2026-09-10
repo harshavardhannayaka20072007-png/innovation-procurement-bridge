@@ -56,6 +56,21 @@ def ensure_schema_extensions():
         transaction_hash VARCHAR(100),
         created_at TIMESTAMP NOT NULL
     )''')
+    # Additive migrations keep existing local databases usable without a reset.
+    user_columns = {row[1] for row in db.execute('PRAGMA table_info(users)')}
+    if 'mobile_number' not in user_columns:
+        db.execute('ALTER TABLE users ADD COLUMN mobile_number VARCHAR(20)')
+    db.execute('''CREATE TABLE IF NOT EXISTS password_reset_otps (
+        reset_id INTEGER PRIMARY KEY AUTOINCREMENT,
+        user_id INTEGER NOT NULL,
+        otp_hash VARCHAR(255) NOT NULL,
+        expires_at TIMESTAMP NOT NULL,
+        attempts INTEGER NOT NULL DEFAULT 0,
+        consumed_at TIMESTAMP,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (user_id) REFERENCES users(user_id)
+    )''')
+    db.execute('CREATE UNIQUE INDEX IF NOT EXISTS idx_applications_challenge_startup ON applications(challenge_id, startup_id)')
     # Earlier demo data pointed to a non-viewable ZIP placeholder. Keep it usable after upgrade.
     db.execute("UPDATE milestones SET evidence_file = 'dashboard_integration_proof.pdf' WHERE evidence_file = 'dashboard_integration_proof.zip'")
     db.commit()

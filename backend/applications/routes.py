@@ -1,3 +1,5 @@
+import sqlite3
+
 from flask import Blueprint, request, jsonify, redirect, url_for, session, flash
 from backend.db import query_db, execute_db
 from backend.auth.session import require_roles
@@ -9,11 +11,15 @@ applications_bp = Blueprint('applications', __name__)
 @require_roles('startup')
 def submit_application():
     challenge_id = request.form.get('challenge_id')
-    proposal = (request.form.get('proposal') or '').strip()[:5000]
-    description = (request.form.get('description') or '').strip()[:2000]
+    proposal = (request.form.get('proposal') or '').strip()
+    description = (request.form.get('description') or '').strip()
 
     if not challenge_id or not proposal:
         flash('Proposal text is required.', 'danger')
+        return redirect(url_for('startup.challenges'))
+    # Reject oversize values rather than silently truncating a legal submission.
+    if len(proposal) > 5000 or len(description) > 2000:
+        flash('Proposal must be at most 5,000 characters and the summary at most 2,000.', 'danger')
         return redirect(url_for('startup.challenges'))
 
     challenge = query_db("SELECT * FROM challenges WHERE challenge_id = ? AND status = 'Published'", (challenge_id,), one=True)
@@ -34,12 +40,17 @@ def submit_application():
 
     startup_name = session.get('company_name') or session.get('username') or 'Startup Applicant'
 
-    application_id = execute_db(
-        """INSERT INTO applications
-           (challenge_id, startup_id, startup_name, challenge_title, description, proposal, status)
-           VALUES (?, ?, ?, ?, ?, ?, 'Submitted')""",
-        (challenge_id, startup_id, startup_name, challenge['title'], description, proposal)
-    )
+    try:
+        application_id = execute_db(
+            """INSERT INTO applications
+               (challenge_id, startup_id, startup_name, challenge_title, description, proposal, status)
+               VALUES (?, ?, ?, ?, ?, ?, 'Submitted')""",
+            (challenge_id, startup_id, startup_name, challenge['title'], description, proposal)
+        )
+    except sqlite3.IntegrityError:
+        # The unique DB index is the final guard against two concurrent requests.
+        flash('You have already submitted an application for this challenge.', 'warning')
+        return redirect(url_for('startup.applications'))
     record_event('APPLICATION_SUBMITTED', 'application', application_id, session, {
         'challenge_id': challenge_id, 'challenge_title': challenge['title'], 'startup_name': startup_name
     })

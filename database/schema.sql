@@ -17,7 +17,19 @@ CREATE TABLE users (
     role VARCHAR(50) NOT NULL CHECK(role IN ('admin', 'government', 'startup', 'evaluator')),
     department VARCHAR(150),
     company_name VARCHAR(150),
+    mobile_number VARCHAR(20) UNIQUE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE password_reset_otps (
+    reset_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER NOT NULL,
+    otp_hash VARCHAR(255) NOT NULL,
+    expires_at TIMESTAMP NOT NULL,
+    attempts INTEGER NOT NULL DEFAULT 0,
+    consumed_at TIMESTAMP,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(user_id)
 );
 
 CREATE TABLE challenges (
@@ -52,6 +64,7 @@ CREATE TABLE applications (
     FOREIGN KEY (challenge_id) REFERENCES challenges(challenge_id),
     FOREIGN KEY (startup_id) REFERENCES users(user_id)
 );
+CREATE UNIQUE INDEX idx_applications_challenge_startup ON applications(challenge_id, startup_id);
 
 CREATE TABLE evaluations (
     evaluation_id INTEGER PRIMARY KEY AUTOINCREMENT,

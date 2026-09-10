@@ -1,4 +1,5 @@
 import os
+import uuid
 
 from flask import Blueprint, request, redirect, url_for, flash, session
 from werkzeug.utils import secure_filename
@@ -28,7 +29,16 @@ def submit_milestone_evidence():
     if os.path.splitext(original_name)[1].lower() not in allowed_extensions:
         flash('Use a PDF, image, CSV, or text evidence file.', 'warning')
         return redirect(url_for('startup.milestones'))
-    evidence_file = f'milestone_{milestone_id}_{original_name}'
+    # Flask's request limit is a safety net; enforce the smaller evidence limit too.
+    uploaded_file.stream.seek(0, os.SEEK_END)
+    file_size = uploaded_file.stream.tell()
+    uploaded_file.stream.seek(0)
+    if file_size > Config.MAX_EVIDENCE_FILE_SIZE:
+        flash('Evidence files must be 10 MB or smaller.', 'warning')
+        return redirect(url_for('startup.milestones'))
+    # A generated name prevents one upload from overwriting another file with the
+    # same client-supplied name.
+    evidence_file = f'milestone_{milestone_id}_{uuid.uuid4().hex}_{original_name}'
     evidence_dir = os.path.join(Config.UPLOAD_FOLDER, 'evidence')
     os.makedirs(evidence_dir, exist_ok=True)
     uploaded_file.save(os.path.join(evidence_dir, evidence_file))
