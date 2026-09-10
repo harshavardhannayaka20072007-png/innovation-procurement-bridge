@@ -92,7 +92,7 @@
 
               <div class="mb-4">
                 <label class="form-label fw-semibold">Evaluator Comments & Recommendations</label>
-                <textarea name="comments" class="form-control" rows="3" placeholder="Provide qualitative feedback for government procurement committee...">{{ prior.comments or '' }}</textarea>
+                <textarea name="comments" class="form-control" rows="3" maxlength="2000" placeholder="Provide qualitative feedback for government procurement committee...">{{ prior.comments or '' }}</textarea>
               </div>
 
               <button type="submit" class="btn btn-primary w-100 py-2 fw-bold">

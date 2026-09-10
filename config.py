@@ -1,6 +1,11 @@
 import os
 
+from dotenv import load_dotenv
+
 BASE_DIR = os.path.abspath(os.path.dirname(__file__))
+# Load local, untracked development configuration before validating required
+# environment values. Production hosts should supply the same values directly.
+load_dotenv(os.path.join(BASE_DIR, '.env'))
 
 
 class Config:
