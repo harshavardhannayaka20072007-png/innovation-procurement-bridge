@@ -1,12 +1,20 @@
 -- Seed Data for Innovation Procurement Bridge (SIH 2026)
+-- ===========================================================
+-- Account Credentials (keep this file private, never share publicly)
+--   gov_admin      (government)  : nrm20142029
+--   evaluator_tech (evaluator)   : rlg2026IPB
+--   sys_admin      (admin)       : admin@Bridge2026!
+--   techsolve      (startup)     : techsolve@2026
+--   greenwater     (startup)     : greenwater@2026
+-- ===========================================================
 
--- Insert Users (Password hashes generated via werkzeug.security generate_password_hash or plain fallback check)
+-- Insert Users
 INSERT INTO users (username, email, password_hash, role, department, company_name) VALUES
-('gov_admin', 'gov@maharashtra.gov.in', 'scrypt:32768:8:1$x0jS1G9Y2A$e7740e53a2ef8677c7f42cf53c0a4d251d1bc6a7102e3b1ee65b7501a5118d5f30663db64f434ee4fb51296bf38b1f5f590bc66ef63cfc32490dfbf8ec39ea2f', 'government', 'Urban Development Dept', NULL),
-('techsolve', 'techsolve@startup.in', 'scrypt:32768:8:1$x0jS1G9Y2A$e7740e53a2ef8677c7f42cf53c0a4d251d1bc6a7102e3b1ee65b7501a5118d5f30663db64f434ee4fb51296bf38b1f5f590bc66ef63cfc32490dfbf8ec39ea2f', 'startup', NULL, 'TechSolve Mobility Labs'),
-('greenwater', 'greenwater@startup.in', 'scrypt:32768:8:1$x0jS1G9Y2A$e7740e53a2ef8677c7f42cf53c0a4d251d1bc6a7102e3b1ee65b7501a5118d5f30663db64f434ee4fb51296bf38b1f5f590bc66ef63cfc32490dfbf8ec39ea2f', 'startup', NULL, 'GreenWater AI Solutions'),
-('evaluator_tech', 'evaluator@maharashtra.gov.in', 'scrypt:32768:8:1$x0jS1G9Y2A$e7740e53a2ef8677c7f42cf53c0a4d251d1bc6a7102e3b1ee65b7501a5118d5f30663db64f434ee4fb51296bf38b1f5f590bc66ef63cfc32490dfbf8ec39ea2f', 'evaluator', 'State Technical Evaluation Committee', NULL),
-('sys_admin', 'admin@bridge.gov.in', 'scrypt:32768:8:1$x0jS1G9Y2A$e7740e53a2ef8677c7f42cf53c0a4d251d1bc6a7102e3b1ee65b7501a5118d5f30663db64f434ee4fb51296bf38b1f5f590bc66ef63cfc32490dfbf8ec39ea2f', 'admin', 'Maharashtra State Innovation Cell', NULL);
+('gov_admin',       'gov@maharashtra.gov.in',       'scrypt:32768:8:1$vYwe8TIxnxxgjl0m$6f0073e91bcf9e8fd70b60adecd283234cafb4a88f798c9b9a8c0440a5f941a1d9ae5cf573d3a91422c9615d7cba3dbbbd35fa0cff89db6b1129894c136bec3f', 'government', 'Urban Development Dept', NULL),
+('techsolve',       'techsolve@startup.in',         'scrypt:32768:8:1$Czc4TiSDsdEtWsAD$6e8f22bb6e9dc5d56663a21b0f71d94c033a91c746840cb034ddf203d2688858ed8fb5849ce9367af492781a5404d80236999b1d6f40d969b5bc930d1284df16', 'startup', NULL, 'TechSolve Mobility Labs'),
+('greenwater',      'greenwater@startup.in',        'scrypt:32768:8:1$Gw9gNXAzacR3c58i$57a8999d13b4c7b2fcb7592d075c2cf01f236ea3a0f7a373cea1621f35dc6ff4085b68f218d6bbe7e5c96fb1d3616859dd1515864025d011bfe8f8f91ff99918', 'startup', NULL, 'GreenWater AI Solutions'),
+('evaluator_tech',  'evaluator@maharashtra.gov.in', 'scrypt:32768:8:1$OWGFLvLoYx9T9FtK$5af1046ae8e88c663278f91d9b4a03d43b21f62e3a8d147c831c1fb1dc77f907ee7c0182426e4a7b02d39ca39e8980c7e8a5e7317feac2c15d9676189b699cbf', 'evaluator', 'State Technical Evaluation Committee', NULL),
+('sys_admin',       'admin@bridge.gov.in',          'scrypt:32768:8:1$4cS1BVvDjxdiRyrn$a3ab5e7b4e9529e872e2101b87e140f1b5a25db2cecf3098228823b84d5d005813e4ceec7dcc348e55200abd79b1c0faf5705b63c37919ae2e04d19402b48756', 'admin', 'Maharashtra State Innovation Cell', NULL);
 
 -- Insert Challenges
 INSERT INTO challenges (title, department, description, requirements, deadline, status, created_by) VALUES
@@ -16,7 +24,7 @@ INSERT INTO challenges (title, department, description, requirements, deadline, 
 
 -- Insert Applications
 INSERT INTO applications (challenge_id, startup_id, startup_name, challenge_title, description, proposal, status, eligibility_score, technology_score, feasibility_score, timeline_score, experience_score, total_score) VALUES
-(1, 2, 'TechSolve Mobility Labs', 'AI Smart Traffic Signal Control System for Municipal Junctions', 'Edge AI traffic light optimization platform proven to reduce congestion by 35%.', 'Our solution utilizes YOLOv8-based computer vision deployed on edge hardware to dynamic switch signals.', 'Shortlisted', 18, 19, 17, 16, 18, 88),
+(1, 2, 'TechSolve Mobility Labs', 'AI Smart Traffic Signal Control System for Municipal Junctions', 'Edge AI traffic light optimization platform proven to reduce congestion by 35%.', 'Our solution utilizes YOLOv8-based computer vision deployed on edge hardware to dynamically switch signals.', 'Shortlisted', 18, 19, 17, 16, 18, 88),
 (2, 3, 'GreenWater AI Solutions', 'IoT Sensor Network for Rural Water Quality Monitoring', 'Ultra-low-power IoT water quality probes with satellite/cellular failover.', 'We offer patent-pending optical sensors with self-cleaning wiper mechanisms and 5-year battery life.', 'Approved for Pilot', 19, 19, 18, 18, 18, 92);
 
 -- Insert Evaluations

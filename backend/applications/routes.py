@@ -9,19 +9,33 @@ applications_bp = Blueprint('applications', __name__)
 @require_roles('startup')
 def submit_application():
     challenge_id = request.form.get('challenge_id')
-    proposal = request.form.get('proposal')
-    description = request.form.get('description', '')
-    
-    challenge = query_db("SELECT * FROM challenges WHERE challenge_id = ?", (challenge_id,), one=True)
-    if not challenge:
-        flash("Challenge not found.", "danger")
+    proposal = (request.form.get('proposal') or '').strip()[:5000]
+    description = (request.form.get('description') or '').strip()[:2000]
+
+    if not challenge_id or not proposal:
+        flash('Proposal text is required.', 'danger')
         return redirect(url_for('startup.challenges'))
-        
+
+    challenge = query_db("SELECT * FROM challenges WHERE challenge_id = ? AND status = 'Published'", (challenge_id,), one=True)
+    if not challenge:
+        flash('Challenge not found or is no longer accepting applications.', 'danger')
+        return redirect(url_for('startup.challenges'))
+
     startup_id = session['user_id']
+
+    # Prevent duplicate applications
+    existing = query_db(
+        'SELECT application_id FROM applications WHERE challenge_id = ? AND startup_id = ?',
+        (challenge_id, startup_id), one=True
+    )
+    if existing:
+        flash('You have already submitted an application for this challenge.', 'warning')
+        return redirect(url_for('startup.applications'))
+
     startup_name = session.get('company_name') or session.get('username') or 'Startup Applicant'
-    
+
     application_id = execute_db(
-        """INSERT INTO applications 
+        """INSERT INTO applications
            (challenge_id, startup_id, startup_name, challenge_title, description, proposal, status)
            VALUES (?, ?, ?, ?, ?, ?, 'Submitted')""",
         (challenge_id, startup_id, startup_name, challenge['title'], description, proposal)
@@ -42,14 +56,22 @@ def update_status(application_id):
     else:
         new_status = request.form.get('status')
 
-    app_record = query_db("SELECT * FROM applications WHERE application_id = ?", (application_id,), one=True)
+    VALID_STATUSES = {'Submitted', 'Under Review', 'Shortlisted', 'Approved for Pilot', 'Rejected'}
+
+    app_record = query_db('SELECT * FROM applications WHERE application_id = ?', (application_id,), one=True)
     if not app_record:
         if request.is_json:
             return jsonify({'error': 'Application not found'}), 404
         flash('Application not found', 'danger')
         return redirect(url_for('government.application_list'))
 
-    execute_db("UPDATE applications SET status = ? WHERE application_id = ?", (new_status, application_id))
+    if new_status not in VALID_STATUSES:
+        if request.is_json:
+            return jsonify({'error': 'Invalid status value.'}), 400
+        flash('Invalid status value.', 'danger')
+        return redirect(url_for('government.application_details', application_id=application_id))
+
+    execute_db('UPDATE applications SET status = ? WHERE application_id = ?', (new_status, application_id))
 
     # If approved for pilot, auto-create pilot record if one doesn't exist yet
     if new_status == 'Approved for Pilot':

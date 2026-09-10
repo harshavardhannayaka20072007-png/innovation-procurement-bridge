@@ -3,6 +3,7 @@ from flask import Flask, flash, redirect, request, url_for, session
 from config import Config
 from backend.db import close_db, init_db, ensure_schema_extensions
 
+
 def create_app():
     app = Flask(__name__)
     app.config.from_object(Config)
@@ -37,11 +38,15 @@ def create_app():
     # Ensure uploads folder exists
     os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 
-    # Auto-initialize SQLite database if not present or empty
-    if not os.path.exists(Config.DATABASE):
+    # Auto-initialize SQLite database on first boot (handles local dev AND cloud deploy)
+    db_path = Config.DATABASE
+    needs_init = not os.path.exists(db_path) or os.path.getsize(db_path) == 0
+    if needs_init:
         with app.app_context():
             init_db()
-    ensure_schema_extensions()
+
+    with app.app_context():
+        ensure_schema_extensions()
 
     # Register Blueprints
     from backend.auth.routes import auth_bp
@@ -92,8 +97,9 @@ def create_app():
 
     return app
 
+
 app = create_app()
 
 if __name__ == '__main__':
-    print("Starting Innovation Procurement Bridge server on http://127.0.0.1:5000")
-    app.run(debug=True, host='0.0.0.0', port=5000)
+    print("Starting Innovation Procurement Bridge server on http://0.0.0.0:5000")
+    app.run(debug=False, host='0.0.0.0', port=5000)

@@ -1,9 +1,11 @@
 from flask import Blueprint, render_template, request, session, redirect, url_for
 from backend.db import query_db
+from backend.auth.session import require_roles
 
 government_bp = Blueprint('government', __name__, url_prefix='/government')
 
 @government_bp.route('/')
+@require_roles('government')
 def dashboard():
     challenges_count = query_db("SELECT COUNT(*) as count FROM challenges", one=True)['count']
     closing_soon_count = query_db("SELECT COUNT(*) as count FROM challenges WHERE deadline >= DATE('now') AND status = 'Published'", one=True)['count']
@@ -23,10 +25,12 @@ def dashboard():
     )
 
 @government_bp.route('/create-challenge')
+@require_roles('government')
 def create_challenge():
     return render_template('government/create_challenge.html')
 
 @government_bp.route('/challenges')
+@require_roles('government')
 def challenges():
     search = request.args.get('search', '').strip()
     if search:
@@ -52,6 +56,7 @@ def challenges():
     return render_template('government/challenges.html', challenges=challenges_list)
 
 @government_bp.route('/applications')
+@require_roles('government')
 def application_list():
     challenge_id = request.args.get('challenge_id', type=int)
     search = request.args.get('search', '').strip()
@@ -73,16 +78,19 @@ def application_list():
     return render_template('government/application_list.html', applications=apps)
 
 @government_bp.route('/applications/<int:application_id>')
+@require_roles('government')
 def application_details(application_id):
     app_record = query_db("SELECT * FROM applications WHERE application_id = ?", (application_id,), one=True)
     return render_template('government/application_details.html', application=app_record)
 
 @government_bp.route('/pilots')
+@require_roles('government')
 def pilots():
     pilots_list = query_db("SELECT * FROM pilots ORDER BY start_date DESC")
     return render_template('government/pilots.html', pilots=pilots_list)
 
 @government_bp.route('/performance')
+@require_roles('government')
 def performance():
     pilot_id = request.args.get('pilot_id', type=int)
     if pilot_id:
@@ -92,6 +100,7 @@ def performance():
     return render_template('government/performance.html', performance_records=records)
 
 @government_bp.route('/ranking')
+@require_roles('government')
 def startup_ranking():
     apps = query_db("SELECT * FROM applications WHERE total_score IS NOT NULL ORDER BY total_score DESC")
     return render_template('government/startup_ranking.html', applications=apps)
